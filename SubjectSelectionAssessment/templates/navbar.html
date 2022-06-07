@@ -1,0 +1,38 @@
+<nav>
+
+    <details class="mobile-only">
+        <summary>☰</summary>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li>
+                {% if 'logged_in' in session %}
+                You are logged in as {{ session.first_name }}
+                <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('add_user') }}">Signup</a>
+                {% endif %}
+            </li>
+            <li><a href="#">Three</a></li>
+        </ul>
+    </details>
+    <a href="{{ url_for('home') }}">Home</a>
+
+    {% if 'logged_in' in session %}
+    You are logged in as {{ session.first_name }}
+    <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('add_user') }}">Signup</a>
+    {% endif %}
+
+    <details>
+        <summary>Dropdown</summary>
+        <ul>
+            <li><a href="#">One</a></li>
+            <li><a href="#">Two</a></li>
+            <li><a href="#">Three</a></li>
+        </ul>
+    </details>
+
+</nav>

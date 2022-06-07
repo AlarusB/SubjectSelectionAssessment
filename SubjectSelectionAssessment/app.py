@@ -9,15 +9,13 @@ app.register_blueprint(setup)
 
 @app.route('/')
 def hello():
-    """Renders a sample page."""
     return "Hello World!"
 
 if __name__ == '__main__':
     import os
 
-    # This is required to allow flashing messages. We will cover this later.
+    # This is required to allow flashing messages
     app.secret_key = os.urandom(32)
-
     HOST = os.environ.get('SERVER_HOST', 'localhost')
     try:
         PORT = int(os.environ.get('SERVER_PORT', '5555'))

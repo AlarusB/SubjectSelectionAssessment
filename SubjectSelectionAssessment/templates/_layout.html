@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font awesome -->
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+    <link rel=" stylesheet" href="{{ url_for('static', filename = 'css/custom.css') }}" />
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>
