@@ -210,21 +210,21 @@ def delete_subject():
 def edit_subject():
     return render_template("index.html")
 
-@app.route('/subjectdashboard')
+@app.route('/subjects')
 def list_subjects():
     return render_template("index.html")
 
 # Student-User related app routes
-@app.route('/usersubjectdashboard')
-def home():
+@app.route('/subjectselection')
+def view_user_subjects():
     return render_template("index.html")
 
 @app.route('/selectsubject')
-def home():
+def user_select_subject():
     return render_template("index.html")
 
 @app.route('/removesubjectselection')
-def home():
+def delete_user_subject():
     return render_template("index.html")
 
 

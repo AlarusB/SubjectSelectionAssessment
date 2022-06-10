@@ -33,7 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
-    <Content Include="static\custom.css" />
+    <Content Include="static\css\custom.css" />
     <Content Include="templates\setup.html" />
     <Content Include="templates\navbar.html" />
     <Content Include="templates\footer.html" />
@@ -50,6 +50,7 @@
     <Content Include="templates\_layout.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="static\css\" />
     <Folder Include="templates\" />
     <Folder Include="static\" />
   </ItemGroup>

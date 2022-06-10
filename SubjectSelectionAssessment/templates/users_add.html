@@ -1,11 +1,45 @@
-<!DOCTYPE html>
+{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}Sign Up{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <h3>Register</h3>
+    <label for="first_name">First Name:</label>
+    <input id="first_name" name="first_name" autocomplete="off" required>
+
+    <label for="last_name">Last Name:</label>
+    <input id="last_name" name="last_name" autocomplete="off" required>
+
+    <label for="email">Email:</label>
+    <input id="email" name="email" type="email" autocomplete="off" required>
+    <p id="message"></p>
+    <label for="password">Password:</label>
+    <input id="password" name="password" type="password" autocomplete="off" required>
+
+    <input type="submit" value="Sign Up" autocomplete="off" required>
+</form>
+<script>
+    let emailInput = document.querySelector('#email');
+    let message = document.querySelector('#message');
+
+    emailInput.addEventListener('input', checkUniqueEmail);
+
+    async function checkUniqueEmail() {
+        // Send a message to flask to check if email was taken or not
+        let response = await fetch("checkemail?email="
+            + emailInput.value);
+        let json = await response.json();
+
+
+        if (json.status == 'OK') {
+            message.style.color = 'green';
+            message.textContent = 'Email is available';
+        } else {
+            message.style.color = 'red';
+            message.textContent = 'Email is taken';
+        }
+
+    }
+</script>
+{% endblock %}

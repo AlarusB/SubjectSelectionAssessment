@@ -1,11 +1,91 @@
-<!DOCTYPE html>
+{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}View profile{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<header class="flex column">
+
+
+
+    <div class="profile-top flex row">
+
+        <img class="profile-img" src="{{ url_for('static', filename='images/' + (result[0].avatar or 'default.png')) }}" alt="">
+
+        <div class="profile-title">
+            <h1 class="">{{ result[0].first_name }} {{ result[0].last_name }}</h1>
+            <h2 class=""><a href="mailto:{{ result[0].email }}">{{ result[0].email }}</a></h2>
+
+            <div>
+                <a class="btn" href="{{ url_for('list_users') }}">Back to dashboard</a>
+                <a class="btn profile-edit-btn" href="/edit?id={{ result[0].user_id }}">Edit Profile</a>
+                <a class="btn profile-delete-btn" href="/delete?id={{ result[0].user_id }}" onclick="return confirm('Are you sure? you want to delete {{result.first_mame }} {{ result.last_name }}')">Delete</a>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="profile-stats">
+        <ul>
+            <li><span class="profile-stat-count">164</span> posts</li>
+            <li><span class="profile-stat-count">188</span> followers</li>
+            <li><span class="profile-stat-count">206</span> following</li>
+        </ul>
+    </div>
+
+
+
+    <div class="profile-bio">
+        <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+    </div>
+    <div class="container-crop">
+        <div id="itemContainer">
+            <ol id="itemListMovies">
+                {% for movie in result %}
+                <li id="" class="list-item flex row">
+                    <div class="flex column">
+                        <div class="flex row">
+                            <img class="movie-img" src="{{ url_for('static', filename='images/' + ('default.png')) }}" alt="">
+                            <div>
+                                <h2>
+                                    <a href="/movies" title="View detailed information on {{ movie.title }} ({{ movie.year_released }})">{{ movie.title }}</a>
+                                    <a title="Movie released in {{ movie.year_released }}">({{ movie.year_released }})</a>
+                                </h2>
+                                <h3>
+                                    Genre {{ movie.genre }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <p class="movie-desc">
+                            {{ movie.summary }}
+                        </p>
+                    </div>
+
+                    <ul class="optionIconMenu flex row lastflex">
+                        {% if session['id'] == result[0].id %}
+                        <li>
+                            <a href="{{ url_for('unwatch_movie', user_id=result[0].user_id, movie_id=movie.movie_id) }}" onclick="return confirm('Are you sure? you want to unwatch {{movie.title }} ({{ movie.year_released }})" class="checkbox" title="Watch {{ movie.title }}">Unwatch</a>
+                        </li>
+                        {% elif session['role'] == 'admin' %}
+                        <li>
+                            <a href="{{ url_for('unwatch_movie', user_id=result[0].user_id, movie_id=movie.movie_id) }}" class="checkbox" title="Watch {{ movie.title }}">Unwatch</a>
+                        </li>
+                        <li>
+                            <a href="/editmovie?id={{ movie.id }}">Edit</a>
+                        </li>
+
+                        <li>
+                            <a href="/deletemovie?id={{ movie.id }}" onclick="return confirm('Are you sure? you want to delete {{movie.title }} ({{ movie.year_released }})')">Delete</a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</header>
+{% endblock %}

@@ -7,8 +7,6 @@ html {
 *, ::before, ::after {
     box-sizing: inherit;
     font-family: inherit;
-    margin: 0;
-    padding: 0;
 }
 
 body {
@@ -61,6 +59,56 @@ fab {
     background-color: rgb(238, 238, 238);
     border-radius: 6px;
     outline: none;
+}
+
+/* Profile Section */
+.profile-title {
+    padding-left: 1em;
+}
+
+.profile-img {
+    width: 8em;
+    height: 8em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-delete-btn {
+    background-color: red;
+    color: white;
+}
+
+.profile-edit-btn {
+}
+
+/* Dashboard Table */
+
+.flat-table {
+    display: block;
+    font-size: 100%;
+    overflow: auto;
+    width: auto;
+}
+
+th {
+    background-color: rgb(52, 55, 60);
+    color: white;
+    font-weight: normal;
+    padding: 10px 15px;
+    text-align: center;
+    font-weight: 800;
+}
+
+td {
+    background-color: rgb(238, 238, 238);
+    color: rgb(50, 50, 50);
+    padding: 8px 12px;
+    text-align: center;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #4C8BF5;
+    color: #fff;
 }
 
 /* DROPDOWN FUNCTIONALITY */
@@ -172,4 +220,108 @@ nav {
     nav .mobile-only {
         display: none;
     }
+}
+
+/* Form */
+
+form {
+    height: 520px fit-content;
+    width: 400px;
+    margin: auto;
+    background-color: rgba(255,255,255,0.13);
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 16px rgba(8,7,16,0.2);
+    padding: 50px 35px;
+}
+
+    form * {
+        letter-spacing: 0.5px;
+        outline: none;
+        border: none;
+    }
+
+    form h3 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 42px;
+        text-align: center;
+    }
+
+label {
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+input {
+    display: block;
+    height: 50px;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+}
+
+::placeholder {
+    color: #e5e5e5;
+}
+
+.hero-image {
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/2234006/pexels-photo-2234006.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+    min-height: 15em;
+    height: 50%;
+    align-self: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-text {
+    text-align: center;
+    color: white;
+}
+
+.hero-header {
+    align-self: center;
+    font-size: 50px;
+}
+
+ul, ol {
+    list-style-type: none;
+    margin: 0 0 1.5em 0;
+}
+
+.list-item {
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+    padding: 9px 10px 6px 10px;
+    position: relative;
+}
+
+.movie-img {
+    height: 4em;
+    width: 4em;
+}
+
+.checkbox {
+}
+
+.container-crop {
+    width: 830px;
+    margin: 0 auto;
+}
+
+.lastflex {
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
 }

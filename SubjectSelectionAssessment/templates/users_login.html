@@ -1,11 +1,19 @@
-<!DOCTYPE html>
+{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}View profile{% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+<form method="post" class="flex column" enctype="multipart/form-data">
+    <h3>Login</h3>
+
+    <label for="email">Email</label>
+    <input id="email" placeholder="Email" name="email" autocomplete="off" type="email" required>
+
+
+    <label for="password">Password</label>
+    <input id="password" placeholder="Password" name="password" autocomplete="off" type="password" required>
+
+    <input type="submit" value="Login">
+</form>
+    {% endblock %}
