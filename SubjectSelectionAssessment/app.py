@@ -200,7 +200,7 @@ def list_users():
 # Subject related app routes
 @app.route('/addsubject')
 def add_subject():
-    return render_template("index.html")
+    return render_template("subjects_add.html")
 
 @app.route('/deletesubject')
 def delete_subject():
