@@ -198,8 +198,27 @@ def list_users():
     return render_template('users_list.html', result=result)
 
 # Subject related app routes
-@app.route('/addsubject')
+@app.route('/addsubject', methods=['GET', 'POST'])
 def add_subject():
+    if request.method == 'POST':
+
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """INSERT INTO assessment_subjects
+                    (title, subject, year, description, internal_credits, external_credits)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                values = (
+                    request.form['title'],
+                    request.form['subject'],
+                    request.form['year'],
+                    request.form['description'],
+                    request.form['internal_credits'],
+                    request.form['external_credits']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+        return redirect(url_for('home'))
     return render_template("subjects_add.html")
 
 @app.route('/deletesubject')
@@ -212,7 +231,13 @@ def edit_subject():
 
 @app.route('/subjects')
 def list_subjects():
-    return render_template("index.html")
+    if session['role'] != 'admin':
+        return abort(404)
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM assessment_subjects")
+            result = cursor.fetchall()
+    return render_template('subjects_list.html', result=result)
 
 # Student-User related app routes
 @app.route('/subjectselection')
