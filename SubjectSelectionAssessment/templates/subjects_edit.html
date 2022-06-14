@@ -1,11 +1,33 @@
-<!DOCTYPE html>
+{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}Sign Up{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <h3>Edit A Subject</h3>
+    <label for="title">Title:</label>
+    <input id="title" name="title" autocomplete="off" required>
+
+    <label for="subject">Subject:</label>
+    <input id="subject" name="subject" autocomplete="off" required>
+
+    <label for="year">Year:</label>
+    <select id="year" name="year" autocomplete="off" required>
+        <option>year</option>
+        {% for i in range(11, 14) %}
+        <option>{{i}}</option>
+        {% endfor %}
+    </select>
+
+    <label for="description">Description:</label>
+    <textarea style="resize:none" id="description" name="description" cols="45" rows="5"></textarea>
+
+    <label for="internal_credits">Internal Credits:</label>
+    <input id="internal_credits" name="internal_credits" type="number" min="0" step="1" autocomplete="off" required>
+
+    <label for="external_credits">External Credits:</label>
+    <input id="external_credits" name="external_credits" type="number" min="0" step="1" autocomplete="off" required>
+
+    <input type="submit" value="Save changes" autocomplete="off" required>
+</form>
+{% endblock %}

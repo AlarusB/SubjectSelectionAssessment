@@ -20,7 +20,7 @@ def page_not_found(error):
 def check_email():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = 'SELECT * FROM users WHERE email = %s'
+            sql = 'SELECT * FROM assessment_users WHERE email = %s'
             values = (
                 request.args['email']
             )
@@ -43,7 +43,7 @@ def add_user():
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = """INSERT INTO users
+                sql = """INSERT INTO assessment_users
                     (first_name, last_name, email, password, avatar)
                     VALUES (%s, %s, %s, %s, %s)
                 """
@@ -62,7 +62,7 @@ def add_user():
                     return redirect(url_for('add_user'))
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = 'SELECT * FROM users WHERE email = %s AND password = %s'
+                sql = 'SELECT * FROM assessment_users WHERE email = %s AND password = %s'
                 values = (
                     request.form['email'],
                     encrypted_password
@@ -88,7 +88,7 @@ def login():
         # LOGIN
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = 'SELECT * FROM users WHERE email = %s AND password = %s'
+                sql = 'SELECT * FROM assessment_users WHERE email = %s AND password = %s'
                 values = (
                     request.form['email'],
                     encrypted_password
@@ -116,7 +116,7 @@ def logout():
 def view_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = """SELECT * FROM users
+            sql = """SELECT * FROM assessment_users
                     JOIN users_movies AS a ON a.user_id = users.id
                     JOIN movies ON movies.id = a.movie_id WHERE users.id=%s"""
             values = (
@@ -148,7 +148,7 @@ def edit_user():
         with create_connection() as connection:    
 
             with connection.cursor() as cursor:
-                sql = """UPDATE users SET
+                sql = """UPDATE assessment_users SET
                         first_name = %s, last_name = %s,
                         email = %s, avatar = %s
                     WHERE id = %s
@@ -172,7 +172,7 @@ def delete_user():
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = "DELETE FROM users WHERE id = %s"
+            sql = "DELETE FROM assessment_users WHERE id = %s"
             values = (
                 request.args['id']
             )
@@ -193,7 +193,7 @@ def list_users():
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users")
+            cursor.execute("SELECT * FROM assessment_users")
             result = cursor.fetchall()
     return render_template('users_list.html', result=result)
 
@@ -227,7 +227,33 @@ def delete_subject():
 
 @app.route('/editsubject')
 def edit_subject():
-    return render_template("index.html")
+
+    if session['role'] != 'admin':
+        return abort(404)
+    
+    if request.method == 'POST':
+
+        with create_connection() as connection:    
+            with connection.cursor() as cursor:
+                sql = """UPDATE assessment_subjects SET
+                        title = %s, subject = %s,
+                        year = %s, description = %s,
+                        internal_credits = %s, external_credits = %s
+                    WHERE id = %s
+                """
+                values = (
+                    request.form['title'],
+                    request.form['subject'],
+                    request.form['year'],
+                    request.form['description'],
+                    request.form['internal_credits'],
+                    request.form['external_credits'],
+                    request.args['id']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+        return redirect(url_for('home'))
+    return render_template("subjects_edit.html")
 
 @app.route('/subjects')
 def list_subjects():
