@@ -1,0 +1,33 @@
+{% extends '_layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<table class="flat-table">
+    <tr>
+        <th>Title</th>
+        <th>Subject</th>
+        <th>Year</th>
+        <th>Description</th>
+        <th>Internal Credits</th>
+        <th>External Credits</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.title }}</td>
+        <td>{{ row.subject }}</td>
+        <td>{{ row.year }}</td>
+        <td>{{ row.description }}</td>
+        <td>{{ row.internal_credits }}</td>
+        <td>{{ row.external_credits }}</td>
+        <td>
+            <a href="/viewsubject?id={{ row.id }}">View</a>
+            <a href="/editsubjectid={{ row.id }}">Edit</a>
+            <a href="/deletesubject?id={{ row.id }}" onclick="return confirm('Are you sure? you want to delete {{row.first_mame }} {{ row.last_name }}')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('add_subject') }}">Add a new subject</a>
+{% endblock %}

@@ -116,9 +116,7 @@ def logout():
 def view_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = """SELECT * FROM assessment_users
-                    JOIN users_movies AS a ON a.user_id = users.id
-                    JOIN movies ON movies.id = a.movie_id WHERE users.id=%s"""
+            sql = """SELECT * FROM assessment_users WHERE id=%s"""
             values = (
                 request.args['id']
             )
