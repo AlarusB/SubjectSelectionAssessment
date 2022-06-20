@@ -21,9 +21,11 @@
         <td>{{ row.description }}</td>
         <td>{{ row.internal_credits }}</td>
         <td>{{ row.external_credits }}</td>
+        <td>{{ row.start_date }}</td>
+        <td>{{ row.end_date }}</td>
         <td>
             <a href="/viewsubject?id={{ row.id }}">View</a>
-            <a href="/editsubjectid={{ row.id }}">Edit</a>
+            <a href="{{ url_for('edit_subject', id=row['id']) }}">Edit</a>
             <a href="/deletesubject?id={{ row.id }}" onclick="return confirm('Are you sure? you want to delete {{row.first_mame }} {{ row.last_name }}')">Delete</a>
         </td>
     </tr>

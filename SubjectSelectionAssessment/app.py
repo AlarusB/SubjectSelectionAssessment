@@ -203,8 +203,8 @@ def add_subject():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO assessment_subjects
-                    (title, subject, year, description, internal_credits, external_credits)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    (title, subject, year, description, internal_credits, external_credits, start_date, end_date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 values = (
                     request.form['title'],
@@ -213,6 +213,8 @@ def add_subject():
                     request.form['description'],
                     request.form['internal_credits'],
                     request.form['external_credits']
+                    request.form['start_date'],
+                    request.form['end_date'],
                 )
                 cursor.execute(sql, values)
                 connection.commit()
@@ -221,9 +223,20 @@ def add_subject():
 
 @app.route('/deletesubject')
 def delete_subject():
-    return render_template("index.html")
+    if session['role'] != 'admin':
+        return abort(404)
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "DELETE FROM assessment_subjects WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+            return redirect(url_for('list_subjects'))
+        
 
-@app.route('/editsubject')
+@app.route('/editsubject', methods=['GET', 'POST'])
 def edit_subject():
 
     if session['role'] != 'admin':
@@ -246,6 +259,8 @@ def edit_subject():
                     request.form['description'],
                     request.form['internal_credits'],
                     request.form['external_credits'],
+                    request.form['start_date'],
+                    request.form['end_date'],
                     request.args['id']
                 )
                 cursor.execute(sql, values)

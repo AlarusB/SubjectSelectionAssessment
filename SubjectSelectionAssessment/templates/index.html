@@ -5,9 +5,9 @@
 {% block content %}
 {% if session['role'] == 'admin' %}
 <a href="{{ url_for('list_users') }}">View All Users</a>
-<a href="{{ url_for('list_movies') }}">View movies!</a>
+<a href="{{ url_for('list_subjects') }}">View movies!</a>
 {% elif 'logged_in' in session %}
 <a href="{{ url_for('view_user', id=session['id']) }}">View your account</a>
-<a href="{{ url_for('list_movies') }}">View movies!</a>
+<a href="{{ url_for('list_subjects') }}">View movies!</a>
 {% endif %}
 {% endblock %}
