@@ -28,6 +28,16 @@
     <label for="external_credits">External Credits:</label>
     <input id="external_credits" name="external_credits" type="number" min="0" step="1" autocomplete="off" required>
 
+    <label for="start_date">Start date:</label>
+    <input type="date" id="start_date" name="start_date"
+           value="2022-01-01"
+           min="2022-01-01" max="2026-12-31" autocomplete="off" required>
+
+    <label for="end_date">End date:</label>
+    <input type="date" id="end_date" name="end_date"
+           value="2022-01-01"
+           min="2022-01-01" max="2026-12-31" autocomplete="off" required>
+
     <input type="submit" value="Save changes" autocomplete="off" required>
 </form>
 {% endblock %}

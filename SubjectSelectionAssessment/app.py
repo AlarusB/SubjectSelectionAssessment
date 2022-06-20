@@ -212,13 +212,13 @@ def add_subject():
                     request.form['year'],
                     request.form['description'],
                     request.form['internal_credits'],
-                    request.form['external_credits']
+                    request.form['external_credits'],
                     request.form['start_date'],
-                    request.form['end_date'],
+                    request.form['end_date']
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect(url_for('home'))
+        return redirect(url_for('list_subjects'))
     return render_template("subjects_add.html")
 
 @app.route('/deletesubject')
@@ -249,7 +249,8 @@ def edit_subject():
                 sql = """UPDATE assessment_subjects SET
                         title = %s, subject = %s,
                         year = %s, description = %s,
-                        internal_credits = %s, external_credits = %s
+                        internal_credits = %s, external_credits = %s,
+                        start_date = %s, end_date = %s
                     WHERE id = %s
                 """
                 values = (
