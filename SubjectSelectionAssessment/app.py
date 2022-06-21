@@ -110,7 +110,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/')
+    return redirect(url_for('home'))
 
 @app.route('/profile')
 def view_user():
@@ -280,14 +280,39 @@ def list_subjects():
     return render_template('subjects_list.html', result=result)
 
 # Student-User related app routes
+
+# This page shows all of your subjects, and if you are able to add more
 @app.route('/subjectselection')
 def view_user_subjects():
     return render_template("index.html")
 
+# This page shows all subjects, allowing you to choose one to add to your user
 @app.route('/selectsubject')
 def user_select_subject():
-    return render_template("index.html")
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM assessment_subjects")
+            result = cursor.fetchall()
+    return render_template("users_subject_selection.html", result=result)
 
+# This page shows all subjects, allowing you to choose one to add to your user
+@app.route('/addselectedsubject') 
+def user_add_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """INSERT INTO assessment_students_subjects
+                (student_id, subject_id)
+                VALUES (%s, %s)
+            """
+            values = (
+                request.args['student_id'],
+                request.args['subject_id']
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+            return redirect(url_for("view_user_subjects"))
+
+# This page removes a subject that has been selected
 @app.route('/removesubjectselection')
 def delete_user_subject():
     return render_template("index.html")
