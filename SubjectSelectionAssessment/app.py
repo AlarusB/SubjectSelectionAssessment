@@ -1,9 +1,13 @@
-import uuid, os, hashlib, pymysql
-from flask import Flask, request, render_template, redirect, url_for, session, abort, flash, jsonify
-app = Flask(__name__)
-
 # Register the setup page and import create_connection()
 from utils import create_connection, setup
+import uuid
+import os
+import hashlib
+import pymysql
+from flask import Flask, request, render_template, redirect, url_for, session,
+abort, flash, jsonify
+
+app = Flask(__name__)
 app.register_blueprint(setup)
 
 
@@ -11,9 +15,11 @@ app.register_blueprint(setup)
 def home():
     return render_template("index.html")
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
 
 # User Related App Routes
 @app.route('/checkemail')
@@ -27,19 +33,20 @@ def check_email():
             cursor.execute(sql, values)
             result = cursor.fetchone()
             if result:
-                return jsonify({ 'status': 'Taken' })
+                return jsonify({'status': 'Taken'})
             else:
-                return jsonify({ 'status': 'OK' }) 
+                return jsonify({'status': 'OK'})
+
 
 # TODO: Add a '/register' (add_user) route that uses INSERT
 @app.route('/register', methods=['GET', 'POST'])
 def add_user():
     if request.method == 'POST':
 
-        password =  request.form['password']
+        password = request.form['password']
         encrypted_password = hashlib.sha256(password.encode()).hexdigest()
 
-        avatar_filename = None    
+        avatar_filename = None
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
@@ -62,7 +69,8 @@ def add_user():
                     return redirect(url_for('add_user'))
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = 'SELECT * FROM assessment_users WHERE email = %s AND password = %s'
+                sql = '''SELECT * FROM assessment_users WHERE email = %s
+                    AND password = %s'''
                 values = (
                     request.form['email'],
                     encrypted_password
@@ -79,6 +87,7 @@ def add_user():
         return redirect(url_for('home'))
     return render_template('users_add.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -88,7 +97,8 @@ def login():
         # LOGIN
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = 'SELECT * FROM assessment_users WHERE email = %s AND password = %s'
+                sql = '''SELECT * FROM assessment_users WHERE email = %s AND
+                    password = %s'''
                 values = (
                     request.form['email'],
                     encrypted_password
@@ -107,10 +117,12 @@ def login():
     else:
         return render_template('users_login.html')
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
 
 @app.route('/profile')
 def view_user():
@@ -124,6 +136,7 @@ def view_user():
             result = cursor.fetchall()
     return render_template('users_view.html', result=result)
 
+
 @app.route('/edituser', methods=['GET', 'POST'])
 def edit_user():
 
@@ -136,14 +149,16 @@ def edit_user():
             ext = os.path.splitext(avatar_image.filename)[1]
             avatar_filename = str(uuid.uuid4())[:8] + ext
             avatar_image.save("static/images/" + avatar_filename)
-            if request.form['old_avatar'] != 'None' and os.path.exists("static/images/" + request.request.form['old_avatar']):
+            if request.form['old_avatar'] != 'None' and
+            os.path.exists("static/images/" +
+                           request.request.form['old_avatar']):
                 os.remove("static/images/" + request.form['old_avatar'])
         elif request.form['old_avatar'] != 'None':
             avatar_filename = request.form['old_avatar']
         else:
             avatar_filename = None
 
-        with create_connection() as connection:    
+        with create_connection() as connection:
 
             with connection.cursor() as cursor:
                 sql = """UPDATE assessment_users SET
@@ -163,6 +178,7 @@ def edit_user():
         return redirect(url_for('home'))
     return render_template('users_edit.html')
 
+
 @app.route('/deleteuser')
 def delete_user():
 
@@ -177,7 +193,6 @@ def delete_user():
             cursor.execute(sql, values)
             connection.commit()
             # Log out if function
-        
     if str(session['id']) == request.args['id']:
         return redirect(url_for('logout'))
     else:
@@ -304,7 +319,7 @@ def view_user_subjects():
                 INNER JOIN
                 assessment_subjects
                 ON 
-	                assessment_students_subjects.subject_id = assessment_subjects.id
+                    assessment_students_subjects.subject_id = assessment_subjects.id
                 WHERE
                 assessment_students_subjects.student_id = %s"""
 
