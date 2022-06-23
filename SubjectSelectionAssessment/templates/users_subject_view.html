@@ -1,0 +1,28 @@
+{% extends '_layout.html' %}
+
+{% block title %}Select a subject{% endblock %}
+
+{% block content %}
+<table class="flat-table">
+    <tr>
+        <th>Title</th>
+        <th>Subject</th>
+        <th>Internal Credits</th>
+        <th>External Credits</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.title }}</td>
+        <td>{{ row.subject }}</td>
+        <td>{{ row.internal_credits }}</td>
+        <td>{{ row.external_credits }}</td>
+        <td>
+            <a href="/viewsubject?id={{ row.id }}">View</a>
+            <a href="{{ url_for('delete_user_subject', id=row.id) }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('user_select_subject') }}">Select a new subject</a>
+{% endblock %}

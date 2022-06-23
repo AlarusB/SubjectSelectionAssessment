@@ -19,6 +19,7 @@
             <a href="/view?id={{ row.id }}">View</a>
             <a href="/edit?id={{ row.id }}">Edit</a>
             <a href="/delete?id={{ row.id }}" onclick="return confirm('Are you sure? you want to delete {{row.first_mame }} {{ row.last_name }}')">Delete</a>
+            <a href="{{ url_for('view_user_subjects', id=row.id) }}">View subject choices</a>
         </td>
     </tr>
     {% endfor %}

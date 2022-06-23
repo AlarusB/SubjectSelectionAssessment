@@ -284,7 +284,38 @@ def list_subjects():
 # This page shows all of your subjects, and if you are able to add more
 @app.route('/subjectselection')
 def view_user_subjects():
-    return render_template("index.html")
+    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
+        return abort(404)
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """SELECT
+                assessment_students_subjects.id, 
+                assessment_students_subjects.student_id, 
+                assessment_students_subjects.subject_id, 
+                assessment_subjects.title, 
+                assessment_subjects.subject, 
+                assessment_subjects.year, 
+                assessment_subjects.description, 
+                assessment_subjects.internal_credits, 
+                assessment_subjects.external_credits, 
+                assessment_subjects.start_date
+                FROM
+                assessment_students_subjects
+                INNER JOIN
+                assessment_subjects
+                ON 
+	                assessment_students_subjects.subject_id = assessment_subjects.id
+                WHERE
+                assessment_students_subjects.student_id = %s"""
+
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchall()
+
+    return render_template('users_subject_view.html', result=result)
+
 
 # This page shows all subjects, allowing you to choose one to add to your user
 @app.route('/selectsubject')
@@ -310,12 +341,30 @@ def user_add_subject():
             )
             cursor.execute(sql, values)
             connection.commit()
-            return redirect(url_for("view_user_subjects"))
+            return redirect(url_for("view_user_subjects", id=session[id]))
 
 # This page removes a subject that has been selected
 @app.route('/removesubjectselection')
 def delete_user_subject():
-    return render_template("index.html")
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM assessment_students_subjects WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
+    if session['role'] != 'admin' and str(session['id']) != str(result['student_id']):
+        return abort(404)
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "DELETE FROM assessment_students_subjects WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+            return redirect(url_for('view_user_subjects'))
 
 
 if __name__ == '__main__':
