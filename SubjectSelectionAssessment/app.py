@@ -4,8 +4,8 @@ import uuid
 import os
 import hashlib
 import pymysql
-from flask import Flask, request, render_template, redirect, url_for, session,
-abort, flash, jsonify
+from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, abort, flash, jsonify
 
 app = Flask(__name__)
 app.register_blueprint(setup)
@@ -149,9 +149,9 @@ def edit_user():
             ext = os.path.splitext(avatar_image.filename)[1]
             avatar_filename = str(uuid.uuid4())[:8] + ext
             avatar_image.save("static/images/" + avatar_filename)
-            if request.form['old_avatar'] != 'None' and
-            os.path.exists("static/images/" +
-                           request.request.form['old_avatar']):
+            if request.form['old_avatar'] != 'None' and (
+                os.path.exists("static/images/" +
+                               request.request.form['old_avatar'])):
                 os.remove("static/images/" + request.form['old_avatar'])
         elif request.form['old_avatar'] != 'None':
             avatar_filename = request.form['old_avatar']
@@ -198,6 +198,7 @@ def delete_user():
     else:
         return redirect(url_for('list_users'))
 
+
 # Dashboard lists all users, this is an admin page
 @app.route('/dashboard')
 def list_users():
@@ -210,6 +211,7 @@ def list_users():
             result = cursor.fetchall()
     return render_template('users_list.html', result=result)
 
+
 # Subject related app routes
 @app.route('/addsubject', methods=['GET', 'POST'])
 def add_subject():
@@ -218,7 +220,8 @@ def add_subject():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO assessment_subjects
-                    (title, subject, year, description, internal_credits, external_credits, start_date, end_date)
+                    (title, subject, year, description, internal_credits,
+                    external_credits, start_date, end_date)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 values = (
@@ -236,6 +239,7 @@ def add_subject():
         return redirect(url_for('list_subjects'))
     return render_template("subjects_add.html")
 
+
 @app.route('/deletesubject')
 def delete_subject():
     if session['role'] != 'admin':
@@ -249,17 +253,17 @@ def delete_subject():
             cursor.execute(sql, values)
             connection.commit()
             return redirect(url_for('list_subjects'))
-        
+
 
 @app.route('/editsubject', methods=['GET', 'POST'])
 def edit_subject():
 
     if session['role'] != 'admin':
         return abort(404)
-    
+
     if request.method == 'POST':
 
-        with create_connection() as connection:    
+        with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """UPDATE assessment_subjects SET
                         title = %s, subject = %s,
@@ -284,6 +288,7 @@ def edit_subject():
         return redirect(url_for('home'))
     return render_template("subjects_edit.html")
 
+
 @app.route('/subjects')
 def list_subjects():
     if session['role'] != 'admin':
@@ -296,30 +301,32 @@ def list_subjects():
 
 # Student-User related app routes
 
+
 # This page shows all of your subjects, and if you are able to add more
 @app.route('/subjectselection')
 def view_user_subjects():
-    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
+    if session['role'] != 'admin' or str(session['id']) != request.args['id']:
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT
-                assessment_students_subjects.id, 
-                assessment_students_subjects.student_id, 
-                assessment_students_subjects.subject_id, 
-                assessment_subjects.title, 
-                assessment_subjects.subject, 
-                assessment_subjects.year, 
-                assessment_subjects.description, 
-                assessment_subjects.internal_credits, 
-                assessment_subjects.external_credits, 
+                assessment_students_subjects.id,
+                assessment_students_subjects.student_id,
+                assessment_students_subjects.subject_id,
+                assessment_subjects.title,
+                assessment_subjects.subject,
+                assessment_subjects.year,
+                assessment_subjects.description,
+                assessment_subjects.internal_credits,
+                assessment_subjects.external_credits,
                 assessment_subjects.start_date
                 FROM
                 assessment_students_subjects
                 INNER JOIN
                 assessment_subjects
-                ON 
-                    assessment_students_subjects.subject_id = assessment_subjects.id
+                ON
+                    assessment_students_subjects.subject_id =
+                    assessment_subjects.id
                 WHERE
                 assessment_students_subjects.student_id = %s"""
 
@@ -341,8 +348,9 @@ def user_select_subject():
             result = cursor.fetchall()
     return render_template("users_subject_selection.html", result=result)
 
+
 # This page shows all subjects, allowing you to choose one to add to your user
-@app.route('/addselectedsubject') 
+@app.route('/addselectedsubject')
 def user_add_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
@@ -358,6 +366,7 @@ def user_add_subject():
             connection.commit()
             return redirect(url_for("view_user_subjects", id=session[id]))
 
+
 # This page removes a subject that has been selected
 @app.route('/removesubjectselection')
 def delete_user_subject():
@@ -369,7 +378,8 @@ def delete_user_subject():
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
-    if session['role'] != 'admin' and str(session['id']) != str(result['student_id']):
+    if session['role'] != 'admin' and str(session['id']) != (
+                                                    str(result['student_id'])):
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
@@ -393,4 +403,3 @@ if __name__ == '__main__':
     except ValueError:
         PORT = 5555
     app.run(HOST, PORT, debug=True)
-
