@@ -5,7 +5,7 @@ import os
 import hashlib
 import pymysql
 from flask import Flask, request, render_template, redirect, url_for, session
-from flask import Flask, abort, flash, jsonify
+from flask import abort, flash, jsonify
 
 app = Flask(__name__)
 app.register_blueprint(setup)
@@ -305,7 +305,7 @@ def list_subjects():
 # This page shows all of your subjects, and if you are able to add more
 @app.route('/subjectselection')
 def view_user_subjects():
-    if session['role'] != 'admin' or str(session['id']) != request.args['id']:
+    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
@@ -364,7 +364,7 @@ def user_add_subject():
             )
             cursor.execute(sql, values)
             connection.commit()
-            return redirect(url_for("view_user_subjects", id=session[id]))
+            return redirect(url_for("view_user_subjects", id=session['id']))
 
 
 # This page removes a subject that has been selected
@@ -389,7 +389,7 @@ def delete_user_subject():
             )
             cursor.execute(sql, values)
             connection.commit()
-            return redirect(url_for('view_user_subjects'))
+            return redirect(url_for('view_user_subjects', id=session['id']))
 
 
 if __name__ == '__main__':
