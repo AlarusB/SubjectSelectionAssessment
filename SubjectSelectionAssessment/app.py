@@ -134,7 +134,7 @@ def view_user():
                 request.args['id']
             )
             cursor.execute(sql, values)
-            result = cursor.fetchall()
+            result = cursor.fetchone()
     return render_template('users_view.html', result=result)
 
 

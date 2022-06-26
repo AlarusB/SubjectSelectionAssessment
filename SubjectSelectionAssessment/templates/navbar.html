@@ -15,6 +15,7 @@
                 {% endif %}
             </li>
             <li><a href="#">Three</a></li>
+
         </ul>
     </details>
     <a href="{{ url_for('home') }}">Home</a>
@@ -22,19 +23,21 @@
     {% if 'logged_in' in session %}
     You are logged in as {{ session.first_name }}
     <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('view_user_subjects', id=session['id']) }}">View Subjects</a>
+    <a href="{{ url_for('view_user_subjects', id=session['id']) }}">Subject Choices</a>
+    <a href="{{ url_for('view_user', id=session['id']) }}">Profile</a>
     {% else %}
     <a href="{{ url_for('login') }}">Login</a>
     <a href="{{ url_for('add_user') }}">Signup</a>
     {% endif %}
 
+    {% if session['role'] == 'admin' %}
     <details>
-        <summary>Dropdown</summary>
+        <summary>Admin</summary>
         <ul>
-            <li><a href="#">One</a></li>
-            <li><a href="#">Two</a></li>
-            <li><a href="#">Three</a></li>
+            <li><a href="{{ url_for('list_subjects') }}">Subjects</a></li>
+            <li><a href="{{ url_for('list_users') }}">Users</a></li>
         </ul>
     </details>
+    {% endif %}
 
 </nav>
