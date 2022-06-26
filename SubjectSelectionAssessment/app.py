@@ -28,7 +28,7 @@ def page_not_found(error):
 # User Related App Routes
 
 
-# Check the email while registering a user
+# AJAX check whether email already exists while registering a user
 @app.route('/checkemail')
 def check_email():
     with create_connection() as connection:
@@ -246,8 +246,12 @@ def add_subject():
                     request.form['start_date'],
                     request.form['end_date']
                 )
-                cursor.execute(sql, values)
-                connection.commit()
+                try:
+                    cursor.execute(sql, values)
+                    connection.commit()
+                except pymysql.err.IntegrityError:
+                    flash('end_date should be greater than start_date')
+                    return redirect(url_for('add_subject'))
         return redirect(url_for('list_subjects'))
     return render_template("subjects_add.html")
 
@@ -275,6 +279,16 @@ def edit_subject():
     if session['role'] != 'admin':
         return abort(404)
 
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM assessment_subjects WHERE id = %s"
+            values = (
+            request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
+
+
     if request.method == 'POST':
 
         with create_connection() as connection:
@@ -296,11 +310,11 @@ def edit_subject():
                     request.form['start_date'],
                     request.form['end_date'],
                     request.args['id']
-                )
+                ) 
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect(url_for('home'))
-    return render_template("subjects_edit.html")
+        return redirect(url_for('view_subjects'))
+    return render_template("subjects_edit.html", subject_info=result)
 
 
 # List all subjects, this is an admin page
@@ -404,7 +418,8 @@ def user_select_subject():
                 for value in dict.values():
                     new_selected.append(value)
             already_selected = new_selected
-
+    if selected <= 0:
+        flash('Already selected 5 subjects')
     return render_template("users_subject_selection.html", result=result,
                            select_left=selected,
                            already_selected=already_selected)
