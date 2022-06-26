@@ -311,9 +311,9 @@ def view_user_subjects():
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT
-                assessment_students_subjects.id,
-                assessment_students_subjects.student_id,
-                assessment_students_subjects.subject_id,
+                assessment_student_subject.id,
+                assessment_student_subject.student_id,
+                assessment_student_subject.subject_id,
                 assessment_subjects.title,
                 assessment_subjects.subject,
                 assessment_subjects.year,
@@ -322,14 +322,14 @@ def view_user_subjects():
                 assessment_subjects.external_credits,
                 assessment_subjects.start_date
                 FROM
-                assessment_students_subjects
+                assessment_student_subject
                 INNER JOIN
                 assessment_subjects
                 ON
-                    assessment_students_subjects.subject_id =
+                    assessment_student_subject.subject_id =
                     assessment_subjects.id
                 WHERE
-                assessment_students_subjects.student_id = %s"""
+                assessment_student_subject.student_id = %s"""
 
             values = (
                 request.args['id']
@@ -338,7 +338,7 @@ def view_user_subjects():
             result = cursor.fetchall()
 
             sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_students_subjects WHERE student_id = %s"""
+                     assessment_student_subject WHERE student_id = %s"""
             values = (
                 session['id']
                 )
@@ -371,7 +371,7 @@ def user_select_subject():
 
             # Make a count
             sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_students_subjects WHERE student_id = %s"""
+                     assessment_student_subject WHERE student_id = %s"""
             values = (
                 session['id']
                 )
@@ -379,7 +379,7 @@ def user_select_subject():
             select_count = cursor.fetchone()
             selected = 5-int(select_count['count_s'])
 
-            sql = """SELECT subject_id FROM assessment_students_subjects WHERE
+            sql = """SELECT subject_id FROM assessment_student_subject WHERE
                      student_id = %s"""
             values = (
                 session['id']
@@ -402,7 +402,7 @@ def user_select_subject():
 def user_add_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = """SELECT * FROM assessment_students_subjects
+            sql = """SELECT * FROM assessment_student_subject
                      WHERE student_id = %s AND subject_id = %s
             """
             values = (
@@ -415,7 +415,7 @@ def user_add_subject():
             # check subjects already selected
 
             sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_students_subjects WHERE student_id = %s"""
+                     assessment_student_subject WHERE student_id = %s"""
             values = (
                 session['id']
                 )
@@ -431,7 +431,7 @@ def user_add_subject():
                 return redirect(url_for("view_user_subjects",
                                 id=session['id']))
 
-            sql = """INSERT INTO assessment_students_subjects
+            sql = """INSERT INTO assessment_student_subject
                 (student_id, subject_id)
                 VALUES (%s, %s)
             """
@@ -449,7 +449,7 @@ def user_add_subject():
 def delete_user_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM assessment_students_subjects WHERE id = %s"
+            sql = "SELECT * FROM assessment_student_subject WHERE id = %s"
             values = (
                 request.args['id']
             )
@@ -460,7 +460,7 @@ def delete_user_subject():
         return abort(404)
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = "DELETE FROM assessment_students_subjects WHERE id = %s"
+            sql = "DELETE FROM assessment_student_subject WHERE id = %s"
             values = (
                 request.args['id']
             )
@@ -474,18 +474,18 @@ def view_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT
-                    assessment_students_subjects.*,
+                    assessment_student_subject.*,
                     assessment_users.first_name,
                     assessment_users.last_name,
                     assessment_users.email
                 FROM
-                    assessment_students_subjects as a_s_s
+                    assessment_student_subject
                     INNER JOIN
                     assessment_users
                 ON
-                    a_s_s.student_id = assessment_users.id
+                    assessment_student_subject.student_id = assessment_users.id
                 WHERE
-                     a_s_s.subject_id = %s
+                     assessment_student_subject.subject_id = %s
             """
             values = (
                 request.args['id']
