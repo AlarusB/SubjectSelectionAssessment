@@ -283,11 +283,10 @@ def edit_subject():
         with connection.cursor() as cursor:
             sql = "SELECT * FROM assessment_subjects WHERE id = %s"
             values = (
-            request.args['id']
+                request.args['id']
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
-
 
     if request.method == 'POST':
 
@@ -310,7 +309,7 @@ def edit_subject():
                     request.form['start_date'],
                     request.form['end_date'],
                     request.args['id']
-                ) 
+                )
                 cursor.execute(sql, values)
                 connection.commit()
         return redirect(url_for('view_subjects'))
