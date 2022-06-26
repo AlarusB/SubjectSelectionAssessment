@@ -8,6 +8,7 @@
                 {% if 'logged_in' in session %}
                 You are logged in as {{ session.first_name }}
                 <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="{{ url_for('view_user_subjects', id=session['id']) }}">View Subjects</a>
                 {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
                 <a href="{{ url_for('add_user') }}">Signup</a>
@@ -21,6 +22,7 @@
     {% if 'logged_in' in session %}
     You are logged in as {{ session.first_name }}
     <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('view_user_subjects', id=session['id']) }}">View Subjects</a>
     {% else %}
     <a href="{{ url_for('login') }}">Login</a>
     <a href="{{ url_for('add_user') }}">Signup</a>

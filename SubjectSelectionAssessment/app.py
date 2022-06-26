@@ -6,6 +6,7 @@ import hashlib
 import pymysql
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask import abort, flash, jsonify
+from datetime import datetime
 
 app = Flask(__name__)
 app.register_blueprint(setup)
@@ -336,7 +337,16 @@ def view_user_subjects():
             cursor.execute(sql, values)
             result = cursor.fetchall()
 
-    return render_template('users_subject_view.html', result=result)
+            sql = "SELECT COUNT(*) As count_s From assessment_students_subjects Where student_id = %s"
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count=cursor.fetchone()
+            selected= 5-int(select_count['count_s'])
+
+
+    return render_template('users_subject_view.html', result=result, select_left = selected)
 
 
 # This page shows all subjects, allowing you to choose one to add to your user
@@ -344,16 +354,74 @@ def view_user_subjects():
 def user_select_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM assessment_subjects")
+
+            #get current date and time
+            date_time = datetime.now()
+
+            date = date_time.date()
+
+            #convert date to string
+            date_str = str(date)
+
+            cursor.execute("SELECT * FROM assessment_subjects WHERE start_date <= %s AND %s <= end_date", (date_str, date_str))
             result = cursor.fetchall()
-    return render_template("users_subject_selection.html", result=result)
+
+            # Make a count
+            sql = "SELECT COUNT(*) As count_s From assessment_students_subjects Where student_id = %s"
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count=cursor.fetchone()
+            selected= 5-int(select_count['count_s'])
+
+            sql = "SELECT subject_id FROM assessment_students_subjects Where student_id = %s"
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            already_selected = cursor.fetchall()
+            new_selected = []
+            for dict in already_selected:
+                for value in dict.values():
+                    new_selected.append(value)
+            already_selected = new_selected
 
 
-# This page shows all subjects, allowing you to choose one to add to your user
+    return render_template("users_subject_selection.html", result=result, select_left = selected , already_selected = already_selected)
+
+
+# This page adds a subject, allowing you to choose one to add to your user
 @app.route('/addselectedsubject')
 def user_add_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
+            sql = """SELECT * FROM assessment_students_subjects
+                     WHERE student_id = %s AND subject_id = %s
+            """
+            values = (
+                str(request.args['student_id']),
+                str(request.args['subject_id'])
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
+
+             # check subjects already selected
+
+            sql = "SELECT COUNT(*) As count_s From assessment_students_subjects Where student_id = %s"
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count=cursor.fetchone()
+            selected= 5-int(select_count['count_s'])
+            if selected <= 0:
+                return redirect(url_for("view_user_subjects", id=session['id'], select_left=selected))
+
+            # If the selection already exists, just return to selection page
+            if result:
+                return redirect(url_for("view_user_subjects", id=session['id']))
+
             sql = """INSERT INTO assessment_students_subjects
                 (student_id, subject_id)
                 VALUES (%s, %s)
@@ -390,6 +458,39 @@ def delete_user_subject():
             cursor.execute(sql, values)
             connection.commit()
             return redirect(url_for('view_user_subjects', id=session['id']))
+
+@app.route('/viewsubject')
+def view_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """SELECT
+	                assessment_students_subjects.*, 
+	                assessment_users.first_name, 
+	                assessment_users.last_name, 
+	                assessment_users.email
+                FROM
+	                assessment_students_subjects
+	                INNER JOIN
+	                assessment_users
+	                ON 
+		                assessment_students_subjects.student_id = assessment_users.id
+                WHERE
+	                assessment_students_subjects.subject_id = %s
+            """
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            students_selected = cursor.fetchall()
+
+            sql = "SELECT * FROM assessment_subjects where id = %s"
+            
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            subject_information = cursor.fetchone()
+    return render_template('subjects_view.html', subject_info=subject_information, students_selected = students_selected)
 
 
 if __name__ == '__main__':

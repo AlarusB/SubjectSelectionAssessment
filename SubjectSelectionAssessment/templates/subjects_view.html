@@ -1,11 +1,62 @@
-<!DOCTYPE html>
+﻿{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}View profile{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<header class="flex column">
+
+
+
+    <div class="profile-top flex row">
+
+        <div class="profile-title">
+            <h1 class="">{{ subject_info.subject }} {{ subject_info.title }}</h1>
+            {% if session['role'] == 'admin' %}
+            <div>
+                <a class="btn" href="{{ url_for('list_subjects') }}">Back to Subjects</a>
+                <a class="btn profile-edit-btn" href="/editsubject?id={{ subject_info.id }}">Edit</a>
+                <a class="btn profile-delete-btn" href="/deletesubject?id={{ subject_info.id }}" onclick="return confirm('Are you sure? you want to delete {{subject_info.title }} ({{ subject_info.subject }})')">Delete</a>
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    <div class="profile-stats">
+        <ul>
+            <li><span class="profile-stat-count">164</span> posts</li>
+            <li><span class="profile-stat-count">188</span> followers</li>
+            <li><span class="profile-stat-count">206</span> following</li>
+        </ul>
+    </div>
+
+
+
+    <div class="profile-bio">
+        <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+    </div>
+</header>
+
+<table class="flat-table">
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in students_selected %}
+    <tr>
+        <td>{{ row.first_name }}</td>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.email }}</td>
+        <td>
+            <a href="/profile?id={{ row.student_id }}">View</a>
+            <a href="/edit?id={{ row.student_id }}">Edit</a>
+            <a href="/delete?id={{ row.student_id }}" onclick="return confirm('Are you sure? you want to delete {{row.first_name }} {{ row.last_name }}')">Delete</a>
+            <a href="{{ url_for('view_user_subjects', id=row.student_id) }}">View subject choices</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

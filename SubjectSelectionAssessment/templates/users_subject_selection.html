@@ -29,9 +29,15 @@
         <td>{{ row.end_date }}</td>
         <td>
             <a href="/viewsubject?id={{ row.id }}">View</a>
+
+            {% if select_left > 0 and not row.id in already_selected %}
             <a href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=row['id']) }}">Select</a>
+            {% elif row.id in already_selected %}
+            <i class="fa fa-check"></i>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}
 </table>
+<a href="{{ url_for('view_user_subjects', id=session['id']) }}">View selected subjects</a>
 {% endblock %}
