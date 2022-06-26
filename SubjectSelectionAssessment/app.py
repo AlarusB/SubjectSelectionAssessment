@@ -11,18 +11,24 @@ from datetime import datetime
 app = Flask(__name__)
 app.register_blueprint(setup)
 
+# Miscellaneous App Routes
 
+
+# Home page
 @app.route('/')
 def home():
     return render_template("index.html")
 
 
+# 404 Page
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
 
-
 # User Related App Routes
+
+
+# Check the email while registering a user
 @app.route('/checkemail')
 def check_email():
     with create_connection() as connection:
@@ -39,7 +45,7 @@ def check_email():
                 return jsonify({'status': 'OK'})
 
 
-# TODO: Add a '/register' (add_user) route that uses INSERT
+# Add a user to database
 @app.route('/register', methods=['GET', 'POST'])
 def add_user():
     if request.method == 'POST':
@@ -89,6 +95,7 @@ def add_user():
     return render_template('users_add.html')
 
 
+# Login user to session
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -119,12 +126,14 @@ def login():
         return render_template('users_login.html')
 
 
+# Logout user from session
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
 
+# View profile of user
 @app.route('/profile')
 def view_user():
     with create_connection() as connection:
@@ -138,6 +147,7 @@ def view_user():
     return render_template('users_view.html', result=result)
 
 
+# Edit user information
 @app.route('/edituser', methods=['GET', 'POST'])
 def edit_user():
 
@@ -180,6 +190,7 @@ def edit_user():
     return render_template('users_edit.html')
 
 
+# Delete user from database
 @app.route('/deleteuser')
 def delete_user():
 
@@ -241,6 +252,7 @@ def add_subject():
     return render_template("subjects_add.html")
 
 
+# Delete subject from database
 @app.route('/deletesubject')
 def delete_subject():
     if session['role'] != 'admin':
@@ -256,6 +268,7 @@ def delete_subject():
             return redirect(url_for('list_subjects'))
 
 
+# Edit subject information
 @app.route('/editsubject', methods=['GET', 'POST'])
 def edit_subject():
 
@@ -290,6 +303,7 @@ def edit_subject():
     return render_template("subjects_edit.html")
 
 
+# List all subjects, this is an admin page
 @app.route('/subjects')
 def list_subjects():
     if session['role'] != 'admin':
@@ -299,7 +313,6 @@ def list_subjects():
             cursor.execute("SELECT * FROM assessment_subjects")
             result = cursor.fetchall()
     return render_template('subjects_list.html', result=result)
-
 # Student-User related app routes
 
 
@@ -397,7 +410,7 @@ def user_select_subject():
                            already_selected=already_selected)
 
 
-# This page adds a subject, allowing you to choose one to add to your user
+# Add a subject, allowing you to choose one to add to your user
 @app.route('/addselectedsubject')
 def user_add_subject():
     with create_connection() as connection:
@@ -444,7 +457,7 @@ def user_add_subject():
             return redirect(url_for("view_user_subjects", id=session['id']))
 
 
-# This page removes a subject that has been selected
+# Remove a subject that has been selected
 @app.route('/removesubjectselection')
 def delete_user_subject():
     with create_connection() as connection:
@@ -469,6 +482,7 @@ def delete_user_subject():
             return redirect(url_for('view_user_subjects', id=session['id']))
 
 
+# View a subject's information
 @app.route('/viewsubject')
 def view_subject():
     with create_connection() as connection:
