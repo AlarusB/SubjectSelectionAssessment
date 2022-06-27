@@ -54,7 +54,7 @@ def add_user():
         encrypted_password = hashlib.sha256(password.encode()).hexdigest()
 
         avatar_filename = None
-
+        # Add details from form to database
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO assessment_users
@@ -68,12 +68,14 @@ def add_user():
                     encrypted_password,
                     avatar_filename
                 )
+                # If email has already been taken return user to retry
                 try:
                     cursor.execute(sql, values)
                     connection.commit()
                 except pymysql.err.IntegrityError:
                     flash('Email has already been taken')
                     return redirect(url_for('add_user'))
+        # Retrieve the details of the user to log them in
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = '''SELECT * FROM assessment_users WHERE email = %s
@@ -102,7 +104,7 @@ def login():
 
         password = request.form['password']
         encrypted_password = hashlib.sha256(password.encode()).hexdigest()
-        # LOGIN
+        # Retrieve the details of the user to log them in
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = '''SELECT * FROM assessment_users WHERE email = %s AND
@@ -136,6 +138,7 @@ def logout():
 # View profile of user
 @app.route('/profile')
 def view_user():
+    # Retrieve the details of the user to show on profile
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT * FROM assessment_users WHERE id=%s"""
@@ -151,10 +154,12 @@ def view_user():
 @app.route('/edituser', methods=['GET', 'POST'])
 def edit_user():
 
-    if session['role'] != 'admin' or str(session['id']) != request.args['id']:
+    # Only admins and the user concerned can edit their information
+    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
         return abort(404)
+    # When the form is submitted
     if request.method == 'POST':
-
+        # Update avatar if possible
         if request.files['avatar'].filename:
             avatar_image = request.files["avatar"]
             ext = os.path.splitext(avatar_image.filename)[1]
@@ -168,9 +173,8 @@ def edit_user():
             avatar_filename = request.form['old_avatar']
         else:
             avatar_filename = None
-
+        # Update user information in database
         with create_connection() as connection:
-
             with connection.cursor() as cursor:
                 sql = """UPDATE assessment_users SET
                         first_name = %s, last_name = %s,
@@ -193,9 +197,10 @@ def edit_user():
 # Delete user from database
 @app.route('/deleteuser')
 def delete_user():
-
+    # Only admins and the user concerned can delete their information
     if session['role'] != 'admin' and str(session['id']) != request.args['id']:
         return abort(404)
+    # Remove user information from database
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = "DELETE FROM assessment_users WHERE id = %s"
@@ -204,7 +209,7 @@ def delete_user():
             )
             cursor.execute(sql, values)
             connection.commit()
-            # Log out if function
+    # If user deleted is currently logged in, log out
     if str(session['id']) == request.args['id']:
         return redirect(url_for('logout'))
     else:
@@ -214,9 +219,10 @@ def delete_user():
 # Dashboard lists all users, this is an admin page
 @app.route('/dashboard')
 def list_users():
-
+    # Only admins can access dashboard
     if session['role'] != 'admin':
         return abort(404)
+    # Retrieve all user information from database
     with create_connection() as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM assessment_users")
@@ -227,8 +233,12 @@ def list_users():
 # Subject related app routes
 @app.route('/addsubject', methods=['GET', 'POST'])
 def add_subject():
+    # Only admins can add subjects
+    if session['role'] != 'admin':
+        return abort(404)
+    # When the form is submitted
     if request.method == 'POST':
-
+        # Add details from form to database
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO assessment_subjects
@@ -246,6 +256,7 @@ def add_subject():
                     request.form['start_date'],
                     request.form['end_date']
                 )
+                # If dates do not make sense, then admin must restart
                 try:
                     cursor.execute(sql, values)
                     connection.commit()
@@ -259,8 +270,10 @@ def add_subject():
 # Delete subject from database
 @app.route('/deletesubject')
 def delete_subject():
+    # Only admins can delete subjects
     if session['role'] != 'admin':
         return abort(404)
+    # Remove subject from database
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = "DELETE FROM assessment_subjects WHERE id = %s"
@@ -275,10 +288,10 @@ def delete_subject():
 # Edit subject information
 @app.route('/editsubject', methods=['GET', 'POST'])
 def edit_subject():
-
+    # Only admins can edit subjects
     if session['role'] != 'admin':
         return abort(404)
-
+    # Retrieve existing information to fill the form defaults
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = "SELECT * FROM assessment_subjects WHERE id = %s"
@@ -287,9 +300,9 @@ def edit_subject():
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
-
+    # When the form is submitted
     if request.method == 'POST':
-
+        # Update subject in database
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """UPDATE assessment_subjects SET
@@ -319,181 +332,15 @@ def edit_subject():
 # List all subjects, this is an admin page
 @app.route('/subjects')
 def list_subjects():
+    # Only admins can view subjects
     if session['role'] != 'admin':
         return abort(404)
+    # Retrieve all subject information from database
     with create_connection() as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM assessment_subjects")
             result = cursor.fetchall()
     return render_template('subjects_list.html', result=result)
-# Student-User related app routes
-
-
-# This page shows all of your subjects, and if you are able to add more
-@app.route('/subjectselection')
-def view_user_subjects():
-    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
-        return abort(404)
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-            sql = """SELECT
-                assessment_student_subject.id,
-                assessment_student_subject.student_id,
-                assessment_student_subject.subject_id,
-                assessment_subjects.title,
-                assessment_subjects.subject,
-                assessment_subjects.year,
-                assessment_subjects.description,
-                assessment_subjects.internal_credits,
-                assessment_subjects.external_credits,
-                assessment_subjects.start_date
-                FROM
-                assessment_student_subject
-                INNER JOIN
-                assessment_subjects
-                ON
-                    assessment_student_subject.subject_id =
-                    assessment_subjects.id
-                WHERE
-                assessment_student_subject.student_id = %s"""
-
-            values = (
-                request.args['id']
-            )
-            cursor.execute(sql, values)
-            result = cursor.fetchall()
-
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            select_count = cursor.fetchone()
-            selected = 5 - int(select_count['count_s'])
-
-    return render_template('users_subject_view.html', result=result,
-                           select_left=selected)
-
-
-# This page shows all subjects, allowing you to choose one to add to your user
-@app.route('/selectsubject')
-def user_select_subject():
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-
-            # Get current date and time
-            date_time = datetime.now()
-
-            date = date_time.date()
-
-            # Convert date to string
-            date_str = str(date)
-
-            cursor.execute("""SELECT * FROM assessment_subjects WHERE
-                              start_date <= %s AND %s <= end_date""",
-                           (date_str, date_str))
-            result = cursor.fetchall()
-
-            # Make a count
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            select_count = cursor.fetchone()
-            selected = 5-int(select_count['count_s'])
-
-            sql = """SELECT subject_id FROM assessment_student_subject WHERE
-                     student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            already_selected = cursor.fetchall()
-            new_selected = []
-            for dict in already_selected:
-                for value in dict.values():
-                    new_selected.append(value)
-            already_selected = new_selected
-    if selected <= 0:
-        flash('Already selected 5 subjects')
-    return render_template("users_subject_selection.html", result=result,
-                           select_left=selected,
-                           already_selected=already_selected)
-
-
-# Add a subject, allowing you to choose one to add to your user
-@app.route('/addselectedsubject')
-def user_add_subject():
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-            sql = """SELECT * FROM assessment_student_subject
-                     WHERE student_id = %s AND subject_id = %s
-            """
-            values = (
-                str(request.args['student_id']),
-                str(request.args['subject_id'])
-            )
-            cursor.execute(sql, values)
-            result = cursor.fetchone()
-
-            # check subjects already selected
-
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            select_count = cursor.fetchone()
-            selected = 5 - int(select_count['count_s'])
-            if selected <= 0:
-                return redirect(url_for("view_user_subjects", id=session['id'],
-                                        select_left=selected))
-
-            # If the selection already exists, just return to selection page
-            if result:
-                return redirect(url_for("view_user_subjects",
-                                id=session['id']))
-
-            sql = """INSERT INTO assessment_student_subject
-                (student_id, subject_id)
-                VALUES (%s, %s)
-            """
-            values = (
-                request.args['student_id'],
-                request.args['subject_id']
-            )
-            cursor.execute(sql, values)
-            connection.commit()
-            return redirect(url_for("view_user_subjects", id=session['id']))
-
-
-# Remove a subject that has been selected
-@app.route('/removesubjectselection')
-def delete_user_subject():
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-            sql = "SELECT * FROM assessment_student_subject WHERE id = %s"
-            values = (
-                request.args['id']
-            )
-            cursor.execute(sql, values)
-            result = cursor.fetchone()
-    if session['role'] != 'admin' and str(session['id']) != (
-                                                    str(result['student_id'])):
-        return abort(404)
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-            sql = "DELETE FROM assessment_student_subject WHERE id = %s"
-            values = (
-                request.args['id']
-            )
-            cursor.execute(sql, values)
-            connection.commit()
-            return redirect(url_for('view_user_subjects', id=session['id']))
 
 
 # View a subject's information
@@ -531,6 +378,179 @@ def view_subject():
     return render_template('subjects_view.html',
                            subject_info=subject_information,
                            students_selected=students_selected)
+
+# Student-User related app routes
+
+
+# This page shows all of your subjects, and if you are able to add more
+@app.route('/subjectselection')
+def view_user_subjects():
+    # Only admins and the user concerned can view their selections
+    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
+        return abort(404)
+    # Retrieve subject information that user has selected from database
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """SELECT
+                assessment_student_subject.id,
+                assessment_student_subject.student_id,
+                assessment_student_subject.subject_id,
+                assessment_subjects.title,
+                assessment_subjects.subject,
+                assessment_subjects.year,
+                assessment_subjects.description,
+                assessment_subjects.internal_credits,
+                assessment_subjects.external_credits,
+                assessment_subjects.start_date
+                FROM
+                assessment_student_subject
+                INNER JOIN
+                assessment_subjects
+                ON
+                    assessment_student_subject.subject_id =
+                    assessment_subjects.id
+                WHERE
+                assessment_student_subject.student_id = %s"""
+
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchall()
+            # Count the amount of subjects that can still be chosen
+            sql = """SELECT COUNT(*) As count_s FROM
+                     assessment_student_subject WHERE student_id = %s"""
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count = cursor.fetchone()
+            selected = 5 - int(select_count['count_s'])
+
+    return render_template('users_subject_view.html', result=result,
+                           select_left=selected)
+
+
+# This page shows all subjects, allowing you to choose one to add to your user
+@app.route('/selectsubject')
+def user_select_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+
+            # Get current date
+            date_time = datetime.now()
+            date = date_time.date()
+            # Convert date to string
+            date_str = str(date)
+            # Retrieve subjects that current date within range
+            cursor.execute("""SELECT * FROM assessment_subjects WHERE
+                              start_date <= %s AND %s <= end_date""",
+                           (date_str, date_str))
+            result = cursor.fetchall()
+
+            # Count the amount of subjects that can still be chosen
+            sql = """SELECT COUNT(*) As count_s FROM
+                     assessment_student_subject WHERE student_id = %s"""
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count = cursor.fetchone()
+            selected = 5-int(select_count['count_s'])
+            # Retrieve subjects already selected
+            sql = """SELECT subject_id FROM assessment_student_subject WHERE
+                     student_id = %s"""
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            already_selected = cursor.fetchall()
+            # Turn the list-dictionary into just a list
+            new_selected = []
+            for dict in already_selected:
+                for value in dict.values():
+                    new_selected.append(value)
+            already_selected = new_selected
+
+    if selected <= 0:
+        flash('Already selected 5 subjects')
+    return render_template("users_subject_selection.html", result=result,
+                           select_left=selected,
+                           already_selected=already_selected)
+
+
+# Add a subject, allowing you to choose one to add to your user
+@app.route('/addselectedsubject')
+def user_add_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """SELECT * FROM assessment_student_subject
+                     WHERE student_id = %s AND subject_id = %s
+            """
+            values = (
+                str(request.args['student_id']),
+                str(request.args['subject_id'])
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
+
+            # Retrieve subjects already selected
+            sql = """SELECT COUNT(*) As count_s FROM
+                     assessment_student_subject WHERE student_id = %s"""
+            values = (
+                session['id']
+                )
+            cursor.execute(sql, values)
+            select_count = cursor.fetchone()
+            # Count the amount of subjects that can still be chosen
+            selected = 5 - int(select_count['count_s'])
+            if selected <= 0:
+                return redirect(url_for("view_user_subjects", id=session['id'],
+                                        select_left=selected))
+            # If the selection already exists, just return to selection page
+            if result:
+                return redirect(url_for("view_user_subjects",
+                                id=session['id']))
+            # Add subject selection to database
+            sql = """INSERT INTO assessment_student_subject
+                (student_id, subject_id)
+                VALUES (%s, %s)
+            """
+            values = (
+                request.args['student_id'],
+                request.args['subject_id']
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+            return redirect(url_for("view_user_subjects", id=session['id']))
+
+
+# Remove a subject that has been selected
+@app.route('/removesubjectselection')
+def delete_user_subject():
+    # Retrieve the user that selected the subject
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM assessment_student_subject WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
+    # Only admins and the user concerend can remove a selection
+    if session['role'] != 'admin' and str(session['id']) != (
+                                                    str(result['student_id'])):
+        return abort(404)
+    # Remove subject selection from database
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "DELETE FROM assessment_student_subject WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+            return redirect(url_for('view_user_subjects', id=session['id']))
 
 
 if __name__ == '__main__':
