@@ -325,7 +325,7 @@ def edit_subject():
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect(url_for('view_subjects'))
+        return redirect(url_for('list_subjects'))
     return render_template("subjects_edit.html", subject_info=result)
 
 
@@ -447,16 +447,6 @@ def user_select_subject():
                               start_date <= %s AND %s <= end_date""",
                            (date_str, date_str))
             result = cursor.fetchall()
-
-            # Count the amount of subjects that can still be chosen
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            select_count = cursor.fetchone()
-            selected = 5-int(select_count['count_s'])
             # Retrieve subjects already selected
             sql = """SELECT subject_id FROM assessment_student_subject WHERE
                      student_id = %s"""
@@ -465,7 +455,14 @@ def user_select_subject():
                 )
             cursor.execute(sql, values)
             already_selected = cursor.fetchall()
+            # Count the amount of subjects that can still be chosen
+            select_count = len(already_selected)
+            selected = 5 - select_count
+
             # Turn the list-dictionary into just a list
+            already_selected = [dict.values() for dict in already_selected]
+
+            print(already_selected)
             new_selected = []
             for dict in already_selected:
                 for value in dict.values():
