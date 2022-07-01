@@ -448,27 +448,21 @@ def user_select_subject():
                            (date_str, date_str))
             result = cursor.fetchall()
             # Retrieve subjects already selected
-            sql = """SELECT subject_id FROM assessment_student_subject WHERE
-                     student_id = %s"""
+            sql = """SELECT
+	                    GROUP_CONCAT(subject_id)
+                    FROM
+	                    assessment_student_subject
+                    WHERE
+	                    assessment_student_subject.student_id = %s"""
             values = (
                 session['id']
                 )
             cursor.execute(sql, values)
-            already_selected = cursor.fetchall()
+            already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
+            already_selected = [int(val) for val in already_selected]
             # Count the amount of subjects that can still be chosen
             select_count = len(already_selected)
             selected = 5 - select_count
-
-            # Turn the list-dictionary into just a list
-            already_selected = [dict.values() for dict in already_selected]
-
-            print(already_selected)
-            new_selected = []
-            for dict in already_selected:
-                for value in dict.values():
-                    new_selected.append(value)
-            already_selected = new_selected
-
     if selected <= 0:
         flash('Already selected 5 subjects')
     return render_template("users_subject_selection.html", result=result,
