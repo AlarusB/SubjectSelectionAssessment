@@ -11,6 +11,12 @@ from datetime import datetime
 app = Flask(__name__)
 app.register_blueprint(setup)
 
+# Functions
+
+
+# 
+def already_selected():
+
 # Miscellaneous App Routes
 
 
@@ -484,24 +490,33 @@ def user_add_subject():
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
+            # If the selection already exists, just return to selection page
+            if result is not None:
+                return redirect(url_for("view_user_subjects",
+                                id=session['id']))
 
             # Retrieve subjects already selected
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
+            sql = """SELECT
+	                    GROUP_CONCAT(subject_id)
+                    FROM
+	                    assessment_student_subject
+                    WHERE
+	                    assessment_student_subject.student_id = %s"""
             values = (
                 session['id']
                 )
             cursor.execute(sql, values)
-            select_count = cursor.fetchone()
+            already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
+            already_selected = [int(val) for val in already_selected]
             # Count the amount of subjects that can still be chosen
-            selected = 5 - int(select_count['count_s'])
+            select_count = len(already_selected)
+            selected = 5 - select_count
+            # If 5 subjects already selected, just return to selection page
             if selected <= 0:
                 return redirect(url_for("view_user_subjects", id=session['id'],
-                                        select_left=selected))
-            # If the selection already exists, just return to selection page
-            if result:
-                return redirect(url_for("view_user_subjects",
-                                id=session['id']))
+                                        select_left=selected,
+                                        already_selected=already_selected))
+
             # Add subject selection to database
             sql = """INSERT INTO assessment_student_subject
                 (student_id, subject_id)
