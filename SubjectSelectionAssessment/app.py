@@ -12,11 +12,33 @@ app = Flask(__name__)
 app.register_blueprint(setup)
 
 # Functions
+def login_user(user_info):
+    session['logged_in'] = True
+    session['first_name'] = result['first_name']
+    session['email'] = result['email']
+    session['role'] = result['role']
+    session['id'] = result['id']
 
 
-# 
-def already_selected():
-
+# This finds subjcets already selected and then counts them
+def get_already_selected():
+    # Retrieve subjects already selected
+    sql = """SELECT
+	            GROUP_CONCAT(subject_id)
+            FROM
+	            assessment_student_subject
+            WHERE
+	            assessment_student_subject.student_id = %s"""
+    values = (
+        session['id']
+        )
+    cursor.execute(sql, values)
+    already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
+    already_selected = [int(val) for val in already_selected]
+    # Count the amount of subjects that can still be chosen
+    select_count = len(already_selected)
+    selected = 5 - select_count
+    return already_selected, selected
 # Miscellaneous App Routes
 
 
@@ -45,7 +67,7 @@ def check_email():
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
-            if result:
+            if result is not None:
                 return jsonify({'status': 'Taken'})
             else:
                 return jsonify({'status': 'OK'})
@@ -92,12 +114,9 @@ def add_user():
                 )
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
-                if result:
-                    session['logged_in'] = True
-                    session['first_name'] = result['first_name']
-                    session['email'] = result['email']
-                    session['role'] = result['role']
-                    session['id'] = result['id']
+                if result is not None:
+                    login_user(result)
+
                     return redirect(url_for('view_user', id=result['id']))
         return redirect(url_for('home'))
     return render_template('users_add.html')
@@ -121,7 +140,7 @@ def login():
                 )
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
-        if result:
+        if result is not None:
             session['logged_in'] = True
             session['first_name'] = result['first_name']
             session['email'] = result['email']
@@ -453,22 +472,8 @@ def user_select_subject():
                               start_date <= %s AND %s <= end_date""",
                            (date_str, date_str))
             result = cursor.fetchall()
-            # Retrieve subjects already selected
-            sql = """SELECT
-	                    GROUP_CONCAT(subject_id)
-                    FROM
-	                    assessment_student_subject
-                    WHERE
-	                    assessment_student_subject.student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
-            already_selected = [int(val) for val in already_selected]
-            # Count the amount of subjects that can still be chosen
-            select_count = len(already_selected)
-            selected = 5 - select_count
+            # Retrieve subjects already selected and count
+            already_selected, selected = get_already_selected()
     if selected <= 0:
         flash('Already selected 5 subjects')
     return render_template("users_subject_selection.html", result=result,
@@ -495,22 +500,8 @@ def user_add_subject():
                 return redirect(url_for("view_user_subjects",
                                 id=session['id']))
 
-            # Retrieve subjects already selected
-            sql = """SELECT
-	                    GROUP_CONCAT(subject_id)
-                    FROM
-	                    assessment_student_subject
-                    WHERE
-	                    assessment_student_subject.student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
-            already_selected = [int(val) for val in already_selected]
-            # Count the amount of subjects that can still be chosen
-            select_count = len(already_selected)
-            selected = 5 - select_count
+            # Retrieve subjects already selected and count
+            already_selected, selected = get_already_selected()
             # If 5 subjects already selected, just return to selection page
             if selected <= 0:
                 return redirect(url_for("view_user_subjects", id=session['id'],
