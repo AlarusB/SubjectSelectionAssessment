@@ -14,14 +14,15 @@ app.register_blueprint(setup)
 # Functions
 def login_user(user_info):
     session['logged_in'] = True
-    session['first_name'] = result['first_name']
-    session['email'] = result['email']
-    session['role'] = result['role']
-    session['id'] = result['id']
+    session['first_name'] = user_info['first_name']
+    session['email'] = user_info['email']
+    session['role'] = user_info['role']
+    session['id'] = user_info['id']
+    return redirect(url_for('view_user', id=user_info['id']))
 
 
 # This finds subjcets already selected and then counts them
-def get_already_selected():
+def get_already_selected(cursor):
     # Retrieve subjects already selected
     sql = """SELECT
 	            GROUP_CONCAT(subject_id)
@@ -115,9 +116,8 @@ def add_user():
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
                 if result is not None:
-                    login_user(result)
+                    return login_user(result)
 
-                    return redirect(url_for('view_user', id=result['id']))
         return redirect(url_for('home'))
     return render_template('users_add.html')
 
@@ -141,12 +141,7 @@ def login():
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
         if result is not None:
-            session['logged_in'] = True
-            session['first_name'] = result['first_name']
-            session['email'] = result['email']
-            session['role'] = result['role']
-            session['id'] = result['id']
-            return redirect(url_for('view_user', id=result['id']))
+            return login_user(result)
         else:
             return redirect('/login')
     else:
@@ -473,7 +468,7 @@ def user_select_subject():
                            (date_str, date_str))
             result = cursor.fetchall()
             # Retrieve subjects already selected and count
-            already_selected, selected = get_already_selected()
+            already_selected, selected = get_already_selected(cursor)
     if selected <= 0:
         flash('Already selected 5 subjects')
     return render_template("users_subject_selection.html", result=result,
@@ -501,7 +496,7 @@ def user_add_subject():
                                 id=session['id']))
 
             # Retrieve subjects already selected and count
-            already_selected, selected = get_already_selected()
+            already_selected, selected = get_already_selected(cursor)
             # If 5 subjects already selected, just return to selection page
             if selected <= 0:
                 return redirect(url_for("view_user_subjects", id=session['id'],
