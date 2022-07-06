@@ -11,6 +11,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.register_blueprint(setup)
 
+
 # Functions
 def login_user(user_info):
     session['logged_in'] = True
@@ -368,6 +369,7 @@ def list_subjects():
 def view_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
+            # Retrieve all students that has selected this subject
             sql = """SELECT
                     assessment_student_subject.*,
                     assessment_users.first_name,
@@ -387,9 +389,8 @@ def view_subject():
             )
             cursor.execute(sql, values)
             students_selected = cursor.fetchall()
-
+            # Retrieve the details of the subject to show on page
             sql = "SELECT * FROM assessment_subjects where id = %s"
-
             values = (
                 request.args['id']
             )
