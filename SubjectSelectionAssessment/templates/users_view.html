@@ -19,8 +19,8 @@
                 {% if session['role'] == 'admin' %}
                 <a class="btn" href="{{ url_for('list_users') }}">Back to dashboard</a>
                 {% endif %}
-                <a class="btn profile-edit-btn" href="/edit?id={{ result.user_id }}">Edit Profile</a>
-                <a class="btn profile-delete-btn" href="/delete?id={{ result.user_id }}" onclick="return confirm('Are you sure? you want to delete {{result.first_mame }} {{ result.last_name }}')">Delete</a>
+                <a class="btn profile-edit-btn" href="/edit?id={{ result.id }}">Edit Profile</a>
+                <a class="btn profile-delete-btn" href="/delete?id={{ result.id }}" onclick="return confirm('Are you sure? you want to delete {{result.first_mame }} {{ result.last_name }}')">Delete</a>
             </div>
 
 
