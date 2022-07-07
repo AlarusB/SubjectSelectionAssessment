@@ -35,12 +35,16 @@ def get_already_selected(cursor):
         session['id']
         )
     cursor.execute(sql, values)
-    already_selected = cursor.fetchone()['GROUP_CONCAT(subject_id)'].split(',')
-    already_selected = [int(val) for val in already_selected]
-    # Count the amount of subjects that can still be chosen
-    select_count = len(already_selected)
-    selected = 5 - select_count
-    return already_selected, selected
+    already_selected = cursor.fetchone()
+    if already_selected is not None and already_selected['GROUP_CONCAT(subject_id)'] is not None:
+        already_selected = already_selected['GROUP_CONCAT(subject_id)'].split(',')
+        already_selected = [int(val) for val in already_selected]
+        # Count the amount of subjects that can still be chosen
+        select_count = len(already_selected)
+        selected = 5 - select_count
+        return already_selected, selected
+    else:
+        return [], 5
 # Miscellaneous App Routes
 
 
