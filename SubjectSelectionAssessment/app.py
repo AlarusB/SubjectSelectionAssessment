@@ -36,7 +36,7 @@ def get_already_selected(cursor):
         )
     cursor.execute(sql, values)
     already_selected = cursor.fetchone()
-    if already_selected is not None and already_selected['GROUP_CONCAT(subject_id)'] is not None:
+    if already_selected['GROUP_CONCAT(subject_id)'] is not None:
         already_selected = already_selected['GROUP_CONCAT(subject_id)'].split(',')
         already_selected = [int(val) for val in already_selected]
         # Count the amount of subjects that can still be chosen
@@ -46,6 +46,28 @@ def get_already_selected(cursor):
     else:
         return [], 5
 # Miscellaneous App Routes
+
+
+# Run before pages where login is required
+@app.before_request
+def restrict():
+    # These are pages that you must be logged in to use
+    restricted_pages = [
+        'list_users',
+        'view_user',
+        'edit_user',
+        'delete_user',
+        'list_users',
+        'list_subjects',
+        'add_subject',
+        'edit_subject',
+        'view_user_subjects',
+        'user_add_subject',
+        'delete_user_subject'
+        ]
+    # If not logged in, and page is restricted then redirect to login
+    if 'logged_in' not in session and request.endpoint in restricted_pages:
+        return redirect(url_for('login'))
 
 
 # Home page
