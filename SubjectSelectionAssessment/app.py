@@ -465,14 +465,7 @@ def view_user_subjects():
             cursor.execute(sql, values)
             result = cursor.fetchall()
             # Count the amount of subjects that can still be chosen
-            sql = """SELECT COUNT(*) As count_s FROM
-                     assessment_student_subject WHERE student_id = %s"""
-            values = (
-                session['id']
-                )
-            cursor.execute(sql, values)
-            select_count = cursor.fetchone()
-            selected = 5 - int(select_count['count_s'])
+            selected = get_already_selected(cursor)[1]
 
     return render_template('users_subject_view.html', result=result,
                            select_left=selected)
