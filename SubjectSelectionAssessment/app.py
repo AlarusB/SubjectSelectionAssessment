@@ -290,8 +290,8 @@ def add_subject():
             with connection.cursor() as cursor:
                 sql = """INSERT INTO assessment_subjects
                     (title, subject, year, description, internal_credits,
-                    external_credits, start_date, end_date)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    external_credits, start_date, end_date, colour)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 values = (
                     request.form['title'],
@@ -301,7 +301,8 @@ def add_subject():
                     request.form['internal_credits'],
                     request.form['external_credits'],
                     request.form['start_date'],
-                    request.form['end_date']
+                    request.form['end_date'],
+                    request.form['colour']
                 )
                 # If dates do not make sense, then admin must restart
                 try:
@@ -356,7 +357,7 @@ def edit_subject():
                         title = %s, subject = %s,
                         year = %s, description = %s,
                         internal_credits = %s, external_credits = %s,
-                        start_date = %s, end_date = %s
+                        start_date = %s, end_date = %s, colour = %s
                     WHERE id = %s
                 """
                 values = (
@@ -368,6 +369,7 @@ def edit_subject():
                     request.form['external_credits'],
                     request.form['start_date'],
                     request.form['end_date'],
+                    request.form['colour'],
                     request.args['id']
                 )
                 cursor.execute(sql, values)
