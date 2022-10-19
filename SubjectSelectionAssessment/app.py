@@ -415,6 +415,7 @@ def view_subject():
             values = (
                 request.args['id']
             )
+
             cursor.execute(sql, values)
             students_selected = cursor.fetchall()
             # Retrieve the details of the subject to show on page
@@ -424,6 +425,7 @@ def view_subject():
             )
             cursor.execute(sql, values)
             subject_information = cursor.fetchone()
+            subject_information['total_credits'] = int(subject_information['external_credits']) + int(subject_information['internal_credits'])
     return render_template('subjects_view.html',
                            subject_info=subject_information,
                            students_selected=students_selected)

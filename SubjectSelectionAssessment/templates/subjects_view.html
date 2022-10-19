@@ -17,45 +17,56 @@
                 <a class="btn profile-edit-btn" href="/editsubject?id={{ subject_info.id }}">Edit</a>
                 <a class="btn profile-delete-btn" href="/deletesubject?id={{ subject_info.id }}" onclick="return confirm('Are you sure? you want to delete {{subject_info.title }} ({{ subject_info.subject }})')">Delete</a>
             </div>
+            {% elif session['role'] == 'user' %}
+            <div>
+                <a class="btn" href="{{ url_for('home') }}">Select Subject</a>
+                <a class="btn" href="{{ url_for('home') }}">Unselect Subject</a>
+                <a class="btn" href="{{ url_for('home') }}">Return to list</a>
+            </div>
+            {% else %}
+            <div>
+                <a class="btn" href="{{ url_for('home') }}">Please Login</a>
+            </div>
             {% endif %}
 
 
         </div>
     </div>
-
+    <p>Description</p>
+    <p>{{ subject_info.description }}</p>
     <div class="profile-stats">
+        <p>Credit Information</p>
         <ul>
-            <li><span class="profile-stat-count">164</span> posts</li>
-            <li><span class="profile-stat-count">188</span> followers</li>
-            <li><span class="profile-stat-count">206</span> following</li>
+            <li><span class="profile-stat-count">Internal Credits: {{ subject_info.internal_credits }}</span></li>
+            <li><span class="profile-stat-count">External Credits: {{ subject_info.external_credits }}</span></li>
+            <li><span class="profile-stat-count">Total Credits: {{ subject_info.total_credits}}</span></li>
         </ul>
-    </div>
-
-
-
-    <div class="profile-bio">
-        <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
     </div>
 </header>
 
+<p>Other students that chose this subject</p>
 <table class="flat-table">
     <tr>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
+        {% if session['role'] == 'admin' %}
         <th>Actions</th>
+        {% endif %}
     </tr>
     {% for row in students_selected %}
     <tr>
         <td>{{ row.first_name }}</td>
         <td>{{ row.last_name }}</td>
         <td>{{ row.email }}</td>
+        {% if session['role'] == 'admin' %}
         <td>
             <a href="/profile?id={{ row.student_id }}">View</a>
             <a href="/edit?id={{ row.student_id }}">Edit</a>
             <a href="/delete?id={{ row.student_id }}" onclick="return confirm('Are you sure? you want to delete {{row.first_name }} {{ row.last_name }}')">Delete</a>
             <a href="{{ url_for('view_user_subjects', id=row.student_id) }}">View subject choices</a>
         </td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
