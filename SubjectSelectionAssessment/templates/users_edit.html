@@ -5,21 +5,21 @@
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     <h3>Change your details</h3>
-    <input type="hidden" name="id" value="{{ result.id }}">
-    <input type="hidden" name="old_avatar" value="{{ result.avatar }}">
+    <input type="hidden" name="id" value="{{ user_info.id }}">
+    <input type="hidden" name="old_avatar" value="{{ user_info.avatar }}">
     <label for="first_name">First Name:</label>
-    <input id="first_name" name="first_name" value="{{ result.first_name }}">
+    <input id="first_name" name="first_name" value="{{ user_info.first_name }}">
 
     <label for="last_name">Last Name:</label>
-    <input id="last_name" name="last_name" value="{{ result.last_name }}">
+    <input id="last_name" name="last_name" value="{{ user_info.last_name }}">
 
     <label for="email">Email:</label>
-    <input id="email" name="email" type="email" value="{{ result.email }}">
+    <input id="email" name="email" type="email" value="{{ user_info.email }}">
 
     <label for="pic">Profile picture:</label>
     <input id="pic" type="file" accept="image/*" name="avatar">
 
-    <img src="{{ url_for('static', filename='images/' + (result.avatar or 'default.png')) }}" height="32">
+    <img src="{{ url_for('static', filename='images/' + (user_info.avatar or 'default.png')) }}" height="32">
 
     <input type="submit" value="Save changes">
 </form>

@@ -204,6 +204,15 @@ def edit_user():
     # Only admins and the user concerned can edit their information
     if session['role'] != 'admin' and str(session['id']) != request.args['id']:
         return abort(404)
+    # Retrieve existing information to fill the form defaults
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM assessment_users WHERE id = %s"
+            values = (
+                request.args['id']
+            )
+            cursor.execute(sql, values)
+            result = cursor.fetchone()
     # When the form is submitted
     if request.method == 'POST':
         # Update avatar if possible
@@ -214,7 +223,7 @@ def edit_user():
             avatar_image.save("static/images/" + avatar_filename)
             if request.form['old_avatar'] != 'None' and (
                 os.path.exists("static/images/" +
-                               request.request.form['old_avatar'])):
+                               request.form['old_avatar'])):
                 os.remove("static/images/" + request.form['old_avatar'])
         elif request.form['old_avatar'] != 'None':
             avatar_filename = request.form['old_avatar']
@@ -238,7 +247,7 @@ def edit_user():
                 cursor.execute(sql, values)
                 connection.commit()
         return redirect(url_for('home'))
-    return render_template('users_edit.html')
+    return render_template('users_edit.html', user_info=result)
 
 
 # Delete user from database
@@ -400,6 +409,7 @@ def view_subject():
             # Retrieve all students that has selected this subject
             sql = """SELECT
                     assessment_student_subject.*,
+                    assessment_users.avatar,
                     assessment_users.first_name,
                     assessment_users.last_name,
                     assessment_users.email

@@ -47,8 +47,8 @@
 <p>Other students that chose this subject</p>
 <table class="flat-table">
     <tr>
-        <th>First name</th>
-        <th>Last name</th>
+        <th></th>
+        <th>Name</th>
         <th>Email</th>
         {% if session['role'] == 'admin' %}
         <th>Actions</th>
@@ -56,8 +56,8 @@
     </tr>
     {% for row in students_selected %}
     <tr>
-        <td>{{ row.first_name }}</td>
-        <td>{{ row.last_name }}</td>
+        <td><img class="profile-img" src="{{ url_for('static', filename='images/' + (row.avatar or 'default.png')) }}" alt=""> </td>
+        <td>{{row.first_name + row.last_name }}</td>
         <td>{{ row.email }}</td>
         {% if session['role'] == 'admin' %}
         <td>
