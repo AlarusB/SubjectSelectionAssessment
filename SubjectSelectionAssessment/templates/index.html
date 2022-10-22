@@ -3,5 +3,10 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<p>I have no clue what to put here</p>
-{% endblock %}
+<div class="flex row hero-image">
+    <div class="flex column hero-text">
+        <h1>Select Your Subjects</h1>
+        <a class="btn red-btn" href="{{ url_for('user_select_subject') }}" role="button">GET STARTED</a>
+    </div>
+</div>
+    {% endblock %}

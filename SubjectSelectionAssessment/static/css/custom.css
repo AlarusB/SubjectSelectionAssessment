@@ -61,6 +61,11 @@ fab {
     outline: none;
 }
 
+.red-btn {
+    background-color: red;
+    color: white;
+}
+
 /* Profile Section */
 .profile-title {
     padding-left: 1em;
@@ -73,16 +78,13 @@ fab {
     object-fit: cover;
 }
 
-.table-profile-img {
-    width: 2em;
-    height: 2em;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
 .profile-delete-btn {
     background-color: red;
     color: white;
+}
+
+.home-header {
+    padding-block: auto;
 }
 
 .profile-edit-btn {
@@ -116,6 +118,13 @@ td {
 tbody tr:nth-child(odd) {
     background-color: #4C8BF5;
     color: #fff;
+}
+
+.table-profile-img {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 /* DROPDOWN FUNCTIONALITY */

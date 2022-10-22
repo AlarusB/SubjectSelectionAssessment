@@ -63,7 +63,8 @@ def restrict():
         'edit_subject',
         'view_user_subjects',
         'user_add_subject',
-        'delete_user_subject'
+        'delete_user_subject',
+        'user_select_subject'
         ]
     # If not logged in, and page is restricted then redirect to login
     if 'logged_in' not in session and request.endpoint in restricted_pages:
