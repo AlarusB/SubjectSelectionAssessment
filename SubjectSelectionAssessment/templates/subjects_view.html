@@ -19,9 +19,9 @@
             </div>
             {% elif session['role'] == 'user' %}
             <div>
-                <a class="btn" href="{{ url_for('home') }}">Select Subject</a>
-                <a class="btn" href="{{ url_for('home') }}">Unselect Subject</a>
-                <a class="btn" href="{{ url_for('home') }}">Return to list</a>
+                <a class="btn" href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=subject_info.id) }}">Select</a>
+                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=subject_info.id) }}">Unselect</a>
+                <a class="btn" href="{{ url_for('user_select_subject') }}">Return to list</a> 
             </div>
             {% else %}
             <div>
@@ -32,10 +32,10 @@
 
         </div>
     </div>
-    <p>Description</p>
+    <h2>Description</h2>
     <p>{{ subject_info.description }}</p>
     <div class="profile-stats">
-        <p>Credit Information</p>
+        <h2>Credit Information</h2>
         <ul>
             <li><span class="profile-stat-count">Internal Credits: {{ subject_info.internal_credits }}</span></li>
             <li><span class="profile-stat-count">External Credits: {{ subject_info.external_credits }}</span></li>
@@ -44,7 +44,7 @@
     </div>
 </header>
 
-<p>Other students that chose this subject</p>
+<h2>Other students that chose this subject</h2>
 <table class="flat-table">
     <tr>
         <th></th>
@@ -56,8 +56,8 @@
     </tr>
     {% for row in students_selected %}
     <tr>
-        <td><img class="profile-img" src="{{ url_for('static', filename='images/' + (row.avatar or 'default.png')) }}" alt=""> </td>
-        <td>{{row.first_name + row.last_name }}</td>
+        <td><img class="table-profile-img" src="{{ url_for('static', filename='images/' + (row.avatar or 'default.png')) }}" alt=""> </td>
+        <td>{{row.first_name + " " + row.last_name }}</td>
         <td>{{ row.email }}</td>
         {% if session['role'] == 'admin' %}
         <td>

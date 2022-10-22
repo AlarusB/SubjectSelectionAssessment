@@ -73,6 +73,13 @@ fab {
     object-fit: cover;
 }
 
+.table-profile-img {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .profile-delete-btn {
     background-color: red;
     color: white;
