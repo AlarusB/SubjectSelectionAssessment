@@ -90,6 +90,24 @@ fab {
 .profile-edit-btn {
 }
 
+.subject-card {
+    height: 150px;
+    width: 350px;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+    align-items: center;
+    padding: 8px;
+}
+
+.subject-header {
+    text-align: center;
+    height: 50%
+}
+
+.subject-actions {
+    text-align: center;
+    height: 50%
+}
+
 /* Dashboard Table */
 
 .flat-table {
