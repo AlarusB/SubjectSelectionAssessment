@@ -1,5 +1,10 @@
 ﻿<!DOCTYPE html>
 
+{% set title %}
+    {% block title %}{% endblock %}
+{% endset %}
+
+
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!-- Required meta tags -->
@@ -11,11 +16,12 @@
 
     <link rel=" stylesheet" href="{{ url_for('static', filename = 'css/custom.css') }}" />
 
-    <title>{% block title %}{% endblock %}</title>
+    <title>{{ title }}</title>
 </head>
 
 <body>
     {% include 'navbar.html' %}
+    {% include 'header.html' %}
     <div class="container">
         {% for message in get_flashed_messages() %}
         <div class="alert">
@@ -44,7 +50,7 @@
         modal.style.display = "block";
     }
 
-        // When the user clicks on <span>
+    // When the user clicks on <span>
     span.onclick = function () {
         modal.style.display = "none";
     }
