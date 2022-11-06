@@ -3,6 +3,49 @@
 {% block title %}Select a subject{% endblock %}
 
 {% block content %}
+<h2>Your Chosen Subjects | ({{5 - select_left}}/5) {% if select_left == 0 %}Please Unselect a subject to choose a new one.{% endif %}</h2>
+
+<div class="flex row wrap subject-group">
+    {% for row in result %}
+    <div class="column">
+
+        <div class="subject-card column colour{{row.id}}">
+            <style>
+            .colour{{row.id}} {
+                background-color: {{row.colour}}
+            }
+
+            </style>
+            <div class="subject-header">
+                <h2>{{ row.title }} | {{ row.subject }}</h2>
+            </div>
+            <div class="subject-desc">
+                <p>Credits:</p>
+                <p class="profile-stat-count">Internal: {{ row.internal_credits }} External: {{ row.external_credits }}</p>
+            </div>
+            <div lass="subject-actions">
+                <a class="btn" href="/viewsubject?id={{ row.id }}">View More</a>
+                <i class="fa fa-check"></i> <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% if select_left > 0 %}
+<a class="btn" href="{{ url_for('user_select_subject') }}">Select a new subject</a>
+{% else %}
+<a class="btn" href="{{ url_for('user_select_subject') }}">View available subjects</a>
+{% endif%}
+
+<h2>Credit Information</h2>
+<ul>
+    <li><span class="profile-stat-count">Internal Credits: {{ credits.internal }}</span></li>
+    <li><span class="profile-stat-count">External Credits: {{ credits.external }}</span></li>
+    <li><span class="profile-stat-count">Total Credits: {{ credits.total}}</span></li>
+</ul>
+
 <table class="flat-table">
     <tr>
         <th>Title</th>
@@ -24,9 +67,5 @@
     </tr>
     {% endfor %}
 </table>
-{% if select_left > 0 %}
-<a href="{{ url_for('user_select_subject') }}">Select a new subject</a>
-{% else %}
-<a href="{{ url_for('user_select_subject') }}">View available subjects</a>
-{% endif%}
+
 {% endblock %}

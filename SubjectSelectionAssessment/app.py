@@ -463,7 +463,8 @@ def view_user_subjects():
                 assessment_subjects.description,
                 assessment_subjects.internal_credits,
                 assessment_subjects.external_credits,
-                assessment_subjects.start_date
+                assessment_subjects.start_date,
+                assessment_subjects.colour
                 FROM
                 assessment_student_subject
                 INNER JOIN
@@ -481,9 +482,17 @@ def view_user_subjects():
             result = cursor.fetchall()
             # Count the amount of subjects that can still be chosen
             selected = get_already_selected(cursor)[1]
-
+    credits = {
+        'internal': 0,
+        'external': 0,
+        'total': 0
+        }
+    for subject in result:
+        credits['internal'] += int(subject['internal_credits'])
+        credits['external'] += int(subject['external_credits'])
+        credits['total'] += int(subject['internal_credits']) + int(subject['external_credits'])
     return render_template('users_subject_view.html', result=result,
-                           select_left=selected)
+                           select_left=selected, credits=credits)
 
 
 # This page shows all subjects, allowing you to choose one to add to your user
