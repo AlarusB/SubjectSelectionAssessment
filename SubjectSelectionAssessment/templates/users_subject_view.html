@@ -24,7 +24,7 @@
                 <p class="profile-stat-count">Internal: {{ row.internal_credits }} External: {{ row.external_credits }}</p>
             </div>
             <div lass="subject-actions">
-                <a class="btn" href="/viewsubject?id={{ row.id }}">View More</a>
+                <a class="btn" href="/viewsubject?id={{ row.subject_id }}">View More</a>
                 <i class="fa fa-check"></i> <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
             </div>
         </div>

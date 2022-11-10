@@ -564,16 +564,30 @@ def user_add_subject():
 # Remove a subject that has been selected
 @app.route('/removesubjectselection')
 def delete_user_subject():
+    # If no selectionid given, instead use link id and subject id
+    if 'id' not in request.args:
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = "SELECT id FROM assessment_student_subject WHERE student_id = %s AND subject_id = %s"
+                values = (
+                    request.args['student_id'],
+                    request.args['subject_id']
+                )
+                cursor.execute(sql, values)
+                selection_id = cursor.fetchone()['id']
+    else:
+        selection_id = request.args['id']
+
     # Retrieve the user that selected the subject
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = "SELECT * FROM assessment_student_subject WHERE id = %s"
             values = (
-                request.args['id']
+                selection_id
             )
             cursor.execute(sql, values)
             result = cursor.fetchone()
-    # Only admins and the user concerend can remove a selection
+    # Only admins and the user concerned can remove a selection
     if session['role'] != 'admin' and str(session['id']) != (
                                                     str(result['student_id'])):
         return abort(404)
@@ -582,7 +596,7 @@ def delete_user_subject():
         with connection.cursor() as cursor:
             sql = "DELETE FROM assessment_student_subject WHERE id = %s"
             values = (
-                request.args['id']
+                selection_id
             )
             cursor.execute(sql, values)
             connection.commit()

@@ -18,7 +18,7 @@
             {% elif session['role'] == 'user' %}
             <div>
                 <a class="btn" href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=subject_info.id) }}">Select</a>
-                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=subject_info.id) }}">Unselect</a>
+                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=subject_info.id) }}">Unselect</a>
                 <a class="btn" href="{{ url_for('user_select_subject') }}">Return to list</a> 
             </div>
             {% else %}
