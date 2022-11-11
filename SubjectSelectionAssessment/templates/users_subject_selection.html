@@ -31,7 +31,7 @@
     </div>
     {% endfor %}
 </div>
-
+{# a comment
 <table class="flat-table">
     <tr>
         <th>ID</th>
@@ -68,5 +68,6 @@
     </tr>
     {% endfor %}
 </table>
+#}
 <a href="{{ url_for('view_user_subjects', id=session['id']) }}">View selected subjects</a>
 {% endblock %}
