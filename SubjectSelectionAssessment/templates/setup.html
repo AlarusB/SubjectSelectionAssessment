@@ -105,7 +105,7 @@
         <label for="db">Database:</label>
         <input id="db" name="db" value="{{ env.db or '' }}" required>
         <br>
-        <input type="submit" value="Save database connection settings">
+        <input type="submit" class="btn" value="Save database connection settings">
     </form>
     <footer>
         {% for message in get_flashed_messages() %}

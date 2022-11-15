@@ -8,12 +8,13 @@
     <h3>Login</h3>
 
     <label for="email">Email</label>
-    <input id="email" placeholder="Email" name="email" autocomplete="off" type="email" required>
+    <input id="email" name="email" autocomplete="off" type="email" required>
 
 
     <label for="password">Password</label>
-    <input id="password" placeholder="Password" name="password" autocomplete="off" type="password" required>
+    <input id="password" name="password" autocomplete="off" type="password" required>
 
-    <input type="submit" value="Login">
+    <input type="submit" class="btn login-btn" value="Sign In">
+    <p>No Account? <a href="{{ url_for('add_user') }}">Register Here</a></p>
 </form>
     {% endblock %}
