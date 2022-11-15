@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 {% set title %}
     {% block title %}{% endblock %}
@@ -18,20 +18,19 @@
 
     <title>{{ title }}</title>
 </head>
-
 <body>
-    {% include 'navbar.html' %}
-    {% include 'header.html' %}
-    <div class="container">
-        {% for message in get_flashed_messages() %}
-        <div class="alert">
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            {{message}}
+    {%- include 'navbar.html' %}
+    {%- include 'header.html' %}
+        <div class="container">
+            {% for message in get_flashed_messages() %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                {{message}}
+            </div>
+            {% endfor %}
+            {% block content %}
+            {% endblock %}
         </div>
-        {% endfor %}
-        {% block content %}
-        {% endblock %}
-    </div>
     {% include 'footer.html' %}
 </body>
 </html>
