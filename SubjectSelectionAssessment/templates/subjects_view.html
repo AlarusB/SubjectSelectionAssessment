@@ -1,4 +1,4 @@
-﻿{% extends '_layout.html' %}
+{% extends '_layout.html' %}
 
 {% block title %}View profile{% endblock %}
 
@@ -54,7 +54,7 @@
     </tr>
     {% for row in students_selected %}
     <tr>
-        <td><img class="table-profile-img" src="{{ url_for('static', filename='images/' + (row.avatar or 'default.png')) }}" alt=""> </td>
+        <td><img class="table-profile-img" src="{{ url_for('static', filename='images/' + (row.avatar or 'default.png')) }}" alt="{{row.first_name}}'s profile picture"> </td>
         <td>{{row.first_name + " " + row.last_name }}</td>
         <td>{{ row.email }}</td>
         {% if session['role'] == 'admin' %}

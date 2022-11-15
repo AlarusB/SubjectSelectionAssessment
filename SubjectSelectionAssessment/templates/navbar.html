@@ -1,41 +1,76 @@
-<nav>
-    <details class="mobile-only">
-        <summary>☰</summary>
-        <ul>
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li>
-                {% if 'logged_in' in session %}
-                You are logged in as {{ session.first_name }}
-                <a href="{{ url_for('logout') }}">Logout</a>
-                <a href="{{ url_for('view_user_subjects', id=session['id']) }}">View Subjects</a>
-                {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('add_user') }}">Signup</a>
-                {% endif %}
-            </li>
-            <li><a href="#">Three</a></li>
+<nav id="navbar">
+    <div class="nav-align-left">
+        <a class="no-hide" href="{{ url_for('home') }}">Home</a>
+        {% if not 'logged_in' in session %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('add_user') }}">Sign Up</a>
+        {% else %}
+        {% if session['role'] == 'admin' %}
+        <a href="{{ url_for('list_subjects') }}">Subjects</a>
+        <a href="{{ url_for('list_users') }}">Users</a>
+        {% else %}
+        <a href="{{ url_for('view_user_subjects', id=session['id']) }}">My Subjects</a>
+        <a href="{{ url_for('user_select_subject') }}">Subject Choices</a>
+        {% endif %}
 
-        </ul>
-    </details>
-    <a href="{{ url_for('home') }}">Home</a>
+        {% endif %}
 
-    {% if 'logged_in' in session %}
-    You are logged in as {{ session.first_name }}
-    <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('view_user_subjects', id=session['id']) }}">Subject Choices</a>
-    <a href="{{ url_for('view_user', id=session['id']) }}">Profile</a>
-    {% else %}
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('add_user') }}">Signup</a>
-    {% endif %}
 
-    {% if session['role'] == 'admin' %}
-    <details>
-        <summary>Admin</summary>
-        <ul>
-            <li><a href="{{ url_for('list_subjects') }}">Subjects</a></li>
-            <li><a href="{{ url_for('list_users') }}">Users</a></li>
-        </ul>
-    </details>
-    {% endif %}
+    </div>
+    <div class="nav-align-right">
+        {% if 'logged_in' in session %}
+        <details>
+            <summary class="flex row">
+                <img class="nav-profile-img" src="{{ url_for('static', filename='images/' + (session.avatar or 'default.png')) }}" alt="{{session.first_name}}'s profile picture'">
+                <p>{{ session.first_name }} ▼</p>
+            </summary>
+            <ul>
+                <li><a href="{{ url_for('view_user', id=session['id']) }}">View Profile</a></li>
+                <li><a href="{{ url_for('edit_user', id=session['id']) }}">Edit Details</a></li>
+                <li><a href="https://parents.pakuranga.school.nz/">Parent Portal</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </details>
+        {% endif %}
+        <details class="mobile-only">
+            <summary>☰</summary>
+            <ul>
+                <li>
+                    {% if 'logged_in' in session %}
+                    <p>You are logged in as {{ session.first_name }}</p>
+                    {% if session['role'] == 'admin' %}
+                    <a href="{{ url_for('list_subjects') }}">Subjects</a>
+                    <a href="{{ url_for('list_users') }}">Users</a>
+                    <a href="{{ url_for('view_user', id=session['id']) }}">View Profile</a>
+                    {% else %}
+                    <a href="{{ url_for('view_user_subjects', id=session['id']) }}">My Subjects</a>
+                    <a href="{{ url_for('user_select_subject') }}">Subject Choices</a>
+                    <a href="{{ url_for('view_user', id=session['id']) }}">View Profile</a>
+                    <a href="{{ url_for('edit_user', id=session['id']) }}">Edit Details</a>
+                    <a href="https://parents.pakuranga.school.nz/">Parent Portal</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('add_user') }}">Signup</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </details>
+    </div>
+
 </nav>
+<script>
+    window.onscroll = function () { myFunction() };
+
+    var navbar = document.getElementById("navbar");
+    var sticky = navbar.offsetTop;
+
+    function myFunction() {
+        if (window.pageYOffset >= sticky) {
+            navbar.classList.add("sticky")
+        } else {
+            navbar.classList.remove("sticky");
+        }
+    }
+</script>

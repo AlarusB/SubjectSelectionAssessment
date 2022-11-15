@@ -16,6 +16,7 @@ app.register_blueprint(setup)
 def login_user(user_info):
     session['logged_in'] = True
     session['first_name'] = user_info['first_name']
+    session['avatar'] = user_info['avatar']
     session['email'] = user_info['email']
     session['role'] = user_info['role']
     session['id'] = user_info['id']

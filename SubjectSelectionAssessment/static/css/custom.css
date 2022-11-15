@@ -163,6 +163,32 @@ tbody tr:nth-child(odd) {
     object-fit: cover;
 }
 
+div.nav-align-right {
+    flex-flow: column;
+}
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+
+.nav-profile-img {
+    position: relative;
+    object-fit: cover;
+    display: inline-block;
+    margin: auto;
+    margin-right: 0.25em;
+    width: 1em;
+    height: 1em; 
+    border-radius: 50%;
+}
+
+summary p {
+    margin: 0;
+}
+
+
+
 /* DROPDOWN FUNCTIONALITY */
 nav details {
     position: relative; /* Make the <ul> element's position relative to this element */
@@ -174,8 +200,22 @@ nav summary::marker {
     content: ""; /* Remove the marker (Defaults to  "⯈ ", or  "⯆ " inside details[open]) */
 }
 
+nav span.dropdown-caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-style: solid;
+    border-width: 4px 4px 0;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+}
+
+
 nav ul {
     position: absolute; /* Break the <ul> out of the page and position it relative to the <details> element */
+    right: 0;
     z-index: 2; /* Place the <ul> element above the ::before element */
 }
 
@@ -202,6 +242,8 @@ nav {
     color: white;
     font-size: 1rem;
     padding: 0.25rem;
+    display: flex;
+    justify-content: space-between;
 }
 
     nav a {
@@ -212,7 +254,7 @@ nav {
         border-radius: 0.25rem
     }
 
-        nav a:hover {
+        nav  a:hover {
             background-color: slateblue;
         }
 
@@ -253,6 +295,9 @@ nav {
     nav a {
         display: none;
     }
+        nav a.no-hide {
+            display: inline-block;
+        }
 
     nav .mobile-only {
         display: inline-block;
@@ -403,3 +448,10 @@ ul, ol {
     .closebtn:hover {
         color: black;
     }
+
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
