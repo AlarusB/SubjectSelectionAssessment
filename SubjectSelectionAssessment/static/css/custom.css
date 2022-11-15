@@ -77,11 +77,6 @@ fab {
     color: #FFF;
 }
 
-.login-btn {
-    background-color: rgb(52 92 50);
-    color: #FFF;
-}
-
 .btn:hover {
     filter: brightness(1.05);
 }
@@ -398,10 +393,14 @@ form div div {
     width: 48%;
 }
 
-    input[type="submit"] {
-        border-top: 0;
-        margin-top: 1rem;
-    }
+input[type="submit"] {
+    border-top: 0;
+    margin-top: 1rem;
+    background-color: rgb(52 92 50);
+    color: #FFF;
+}
+
+}
 
     ::placeholder {
         color: #e5e5e5;
