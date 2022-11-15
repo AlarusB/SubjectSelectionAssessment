@@ -613,6 +613,8 @@ if __name__ == '__main__':
 
     # This is required to allow flashing messages
     app.secret_key = os.urandom(32)
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
     HOST = os.environ.get('SERVER_HOST', 'localhost')
     try:
         PORT = int(os.environ.get('SERVER_PORT', '5555'))
