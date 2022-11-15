@@ -8,23 +8,26 @@
     {% for row in result %}
     <div class="column">
 
-        <div class="subject-card column colour{{row.id}}">
+        <div class="subject-card column">
+            <div class="subject-colourtip colour{{row.id}}"></div>
             <style>
             .colour{{row.id}} {
-                background-color: {{row.colour}}
+                background-color: {{row.colour}};
             }
 
             </style>
-            <div class="subject-header">
-                <h2>{{ row.title }} | {{ row.subject }}</h2>
+            <h2 class="subject-header">{{ row.title }} | {{ row.subject }}</h2>
+            <div class="subject-desc">
+                <h3>Credits:</h3>
+                <p class="">Internal: {{ row.internal_credits }} External: {{ row.external_credits }}</p>
             </div>
-            <div lass="subject-actions">
-                <a class="btn" href="/viewsubject?id={{ row.id }}">View</a>
+            <div class="subject-actions flex row">
                 {% if select_left > 0 and not row.id in already_selected %}
-                <a class="btn" href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=row['id']) }}">Select</a>
+                <a class="btn colour{{row.id}}" href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=row['id']) }}">Select</a>
                 {% elif row.id in already_selected %}
-                <i class="fa fa-check"></i> <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=row['id']) }}">Unselect</a>
+                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=row['id']) }}">Unselect</a>
                 {% endif %}
+                <a class="btn" href="/viewsubject?id={{ row.id }}">View More</a>
             </div>
         </div>
 

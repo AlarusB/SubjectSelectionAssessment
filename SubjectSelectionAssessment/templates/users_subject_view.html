@@ -9,23 +9,22 @@
     {% for row in result %}
     <div class="column">
 
-        <div class="subject-card column colour{{row.id}}">
+        <div class="subject-card column">
+            <div class="subject-colourtip colour{{row.id}}"></div>
             <style>
             .colour{{row.id}} {
-                background-color: {{row.colour}}
+                background-color: {{row.colour}};
             }
 
             </style>
-            <div class="subject-header">
-                <h2>{{ row.title }} | {{ row.subject }}</h2>
-            </div>
+            <h2 class="subject-header">{{ row.title }} | {{ row.subject }}</h2>
             <div class="subject-desc">
-                <p>Credits:</p>
-                <p class="profile-stat-count">Internal: {{ row.internal_credits }} External: {{ row.external_credits }}</p>
+                <h3>Credits:</h3>
+                <p class="">Internal: {{ row.internal_credits }} External: {{ row.external_credits }}</p>
             </div>
-            <div lass="subject-actions">
+            <div class="subject-actions flex row">
                 <a class="btn" href="/viewsubject?id={{ row.subject_id }}">View More</a>
-                <i class="fa fa-check"></i> <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
+                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
             </div>
         </div>
 
