@@ -10,11 +10,10 @@
     <label for="email">Email</label>
     <input id="email" name="email" autocomplete="off" type="email" required>
 
-
     <label for="password">Password</label>
     <input id="password" name="password" autocomplete="off" type="password" required>
 
     <input type="submit" class="btn login-btn" value="Sign In">
-    <p>No Account? <a href="{{ url_for('add_user') }}">Register Here</a></p>
+    <p>No account? <a href="{{ url_for('add_user') }}">Register Here</a></p>
 </form>
     {% endblock %}

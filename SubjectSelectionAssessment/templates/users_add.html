@@ -5,25 +5,37 @@
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     <h3>Register</h3>
-    <label for="first_name">First Name:</label>
-    <input id="first_name" name="first_name" autocomplete="off" required>
 
-    <label for="last_name">Last Name:</label>
-    <input id="last_name" name="last_name" autocomplete="off" required>
-
-    <label for="email">Email:</label>
+    <label for="email">Email</label>
     <input id="email" name="email" type="email" autocomplete="off" required>
     <p id="message"></p>
-    <label for="password">Password:</label>
+
+    <label for="password">Password</label>
     <input id="password" name="password" type="password" autocomplete="off" required>
 
-    <input type="submit" class="btn" value="Sign Up" autocomplete="off" required>
+    <div class="flex row space-between">
+        <div class="form-flex-item">
+            <label for="first_name">First Name</label>
+            <input id="first_name" name="first_name" autocomplete="off" required>
+        </div>
+        <div class="form-flex-item">
+            <label for="last_name">Last Name</label>
+            <input id="last_name" name="last_name" autocomplete="off" required>
+        </div>
+    </div>
+    <input type="submit" class="btn login-btn" value="Sign Up" autocomplete="off" required>
+    <p>Have an account? <a href="{{ url_for('login') }}">Login</a></p>
 </form>
 <script>
     let emailInput = document.querySelector('#email');
     let message = document.querySelector('#message');
 
     emailInput.addEventListener('input', checkUniqueEmail);
+
+    function validateEmail(email) {
+        const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return res.test(String(email).toLowerCase());
+    }
 
     async function checkUniqueEmail() {
         // Send a message to flask to check if email was taken or not
@@ -32,12 +44,12 @@
         let json = await response.json();
 
 
-        if (json.status == 'OK') {
+        if ((json.status == 'OK') && (validateEmail(emailInput.value))) {
             message.style.color = 'green';
             message.textContent = 'Email is available';
         } else {
             message.style.color = 'red';
-            message.textContent = 'Email is taken';
+            message.textContent = 'Email is invalid or already taken';
         }
 
     }
