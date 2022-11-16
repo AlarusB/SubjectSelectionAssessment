@@ -478,18 +478,29 @@ input[type="file"] {
 #preview {
     width: 100%;
     height: auto;
+    aspect-ratio: 1;
     display: block;
     margin-top: 30px;
     border-radius: 100%;
     object-fit: cover;
 }
 
+.relative {
+    position: relative;
+}
 .center {
     position: absolute;
-    top: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    text-align: center;
-    font-size: 18px;
+    height: 100%;
+    user-select: none; /* Standard */
+    pointer-events: none;
+    background-color: rgba(127,127,127,0.4);
+    border-radius: 50%;
+    color: white;
+    font-weight: 500;
 }
 
     ::placeholder {

@@ -22,6 +22,15 @@ def login_user(user_info):
     session['id'] = user_info['id']
     return redirect(url_for('view_user', id=user_info['id']))
 
+def edit_user_session(user_info):
+    # Guard clause incase admin is editing another user
+    if session['role'] == 'admin':
+        return redirect(url_for('list_users'))
+
+    session['first_name'] = user_info['first_name']
+    session['avatar'] = user_info['avatar']
+    session['email'] = user_info['email']
+    return redirect(url_for('view_user', id=user_info['id']))
 
 # This finds subjcets already selected and then counts them
 def get_already_selected(cursor):
@@ -253,7 +262,12 @@ def edit_user():
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect(url_for('home'))
+        new_info = {'first_name': request.form['first_name'],
+                    'avatar': avatar_filename,
+                    'email': request.form['email'],
+                    'id': request.args['id']}
+        return edit_user_session(new_info)
+
     return render_template('users_edit.html', user_info=result)
 
 

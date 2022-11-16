@@ -17,12 +17,16 @@
     <input id="email" name="email" type="email" value="{{ user_info.email }}">
 
     <label for="pic">Profile Picture</label>
-    <label id="pic-label" for="pic">
-        <img id="preview" src="{{ url_for('static', filename='images/' + (user_info.avatar or 'default.png'))}}">
+    <div class="relative">
         <div class="center">Click to upload</div>
-    </label>
+        <label id="pic-label" for="pic">
+            <img id="preview" alt="Selected profile picture" src="{{ url_for('static', filename='images/' + (user_info.avatar or 'default.png'))}}">
+        </label>
+    </div>
+
+
     <input id="pic" type="file" onchange="showPreview(event);" accept="image/*" name="avatar" style="background-image: url()">
-    
+
 
     <input type="submit" class="btn" value="Save changes">
 </form>
