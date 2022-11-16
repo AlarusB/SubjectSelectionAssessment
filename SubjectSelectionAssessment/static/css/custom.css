@@ -1,8 +1,29 @@
 ﻿/* DEFAULT STYLES */
+:root {
+    --primary: #3C70D7;
+    --secondary: rgb(52 92 50);
+    --tertiary: rgba(240,240,240);
+    --quaternary: #101019;
+    --warning: #ffc107;
+    --danger: #E4272F;
+    --default-text-colour: #212529;
+    --primary-text-colour: white;
+    --secondary-text-colour: white;
+    --tetriary-text-colour: #212529;
+    --quaternary-text-colour: white;
+    --warning-text-colour: white;
+    --danger-text-colour: white;
+    --hover-brightness: 1.05;
+    --click-brightness: 0.95;
+    --hover-quaternary: #1A1D26;
+}
+
 html {
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    color: var(--default-text-colour)
 }
+
 
 *, ::before, ::after {
     box-sizing: inherit;
@@ -64,8 +85,8 @@ fab {
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    color: #000;
-    background-color: rgb(238, 238, 238);
+    background-color: rgba(220,220,220);
+    color: var(--default-text-colour);
     border-radius: 6px;
     border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     outline: none;
@@ -73,17 +94,12 @@ fab {
     user-select: none; /* Standard syntax */
 }
 
-.red-btn {
-    background-color: rgb(238, 23, 23);
-    color: #FFF;
-}
-
 .btn:hover {
-    filter: brightness(1.05);
+    filter: brightness(var(--hover-brightness));
 }
 
 .btn:active {
-    filter: brightness(0.95);
+    filter: brightness(var(--click-brightness));
     transform: translateY(1px);
 }
 
@@ -99,9 +115,9 @@ fab {
     object-fit: cover;
 }
 
-.profile-delete-btn {
-    background-color: rgb(238, 23, 23);
-    color: white;
+.danger-btn {
+    background-color: var(--danger);
+    color: var(--danger-text-colour);
 }
 
 .home-header {
@@ -290,8 +306,8 @@ nav {
 
 /* AESTHETICS */
 nav {
-    background-color: darkslateblue;
-    color: white;
+    background-color: var(--quaternary);
+    color: var(--quaternary-text-colour);
     font-size: 1rem;
     padding: 0.25rem;
     display: flex;
@@ -300,14 +316,14 @@ nav {
 
     nav a {
         display: inline-block;
-        color: white;
+        color: var(--quaternary-text-colour);
         text-decoration: none;
         padding: 0.5rem 1rem;
         border-radius: 0.25rem
     }
 
-        nav  a:hover {
-            background-color: slateblue;
+        nav a:hover {
+            background-color: var(--hover-quaternary);
         }
 
     nav summary {
@@ -315,7 +331,7 @@ nav {
     }
 
         nav details[open] summary, nav summary:hover {
-            background-color: slateblue;
+            background-color: var(--hover-quaternary);
             border-radius: 0.25rem;
         }
 
@@ -323,19 +339,19 @@ nav {
         list-style: none;
         margin: 0;
         padding: 0.5rem 0;
-        background-color: darkslateblue;
+        background-color: var(--quaternary);
         border-radius: 0.25rem;
     }
 
     nav li a {
         display: block;
-        color: white;
+        color: var(--quaternary-text-colour);
         text-decoration: none;
         padding: 0.5rem 1rem;
     }
 
         nav li a:hover {
-            background-color: slateblue;
+            background-color: var(--hover-quaternary);
         }
 
     /* RESPONSIVE */
@@ -405,7 +421,7 @@ label {
 }
 
 
-input {
+input, textarea {
     display: block;
     height: 50px;
     width: 100%;
@@ -416,7 +432,12 @@ input {
     font-size: 0.875rem;
     font-weight: 300;
     border-top: solid 1px rgba(0, 0, 0, 0.1);
-    background-color: rgba(240,240,240);
+    background-color: var(--tertiary);
+    color: var(--tetriary-text-colour);
+}
+
+textarea {
+    height: 200px;
 }
 
 form div div {
@@ -426,8 +447,8 @@ form div div {
 input[type="submit"] {
     border-top: 0;
     margin-top: 1rem;
-    background-color: rgb(52 92 50);
-    color: #FFF;
+    background-color: var(--secondary);
+    color: var(--secondary-text-colour);
 }
 
 }
@@ -504,8 +525,8 @@ ul, ol {
 /* The alert message box */
 .alert {
     padding: 20px;
-    background-color: #f44336; /* Red */
-    color: white;
+    background-color: var(--danger);
+    color: var(--danger-text-colour);
     margin-bottom: 15px;
 }
 
@@ -523,7 +544,7 @@ ul, ol {
 
     /* When moving the mouse over the close button */
     .closebtn:hover {
-        color: black;
+        color: var(--default-text-colour);
     }
 
 

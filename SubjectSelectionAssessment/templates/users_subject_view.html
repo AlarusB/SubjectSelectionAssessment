@@ -24,7 +24,7 @@
             </div>
             <div class="subject-actions flex row">
                 <a class="btn" href="/viewsubject?id={{ row.subject_id }}">View More</a>
-                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
+                <a class="btn danger-btn" href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
             </div>
         </div>
 

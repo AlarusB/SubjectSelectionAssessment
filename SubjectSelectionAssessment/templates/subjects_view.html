@@ -13,12 +13,12 @@
             <div>
                 <a class="btn" href="{{ url_for('list_subjects') }}">Back to Subjects</a>
                 <a class="btn profile-edit-btn" href="/editsubject?id={{ subject_info.id }}">Edit</a>
-                <a class="btn profile-delete-btn" href="/deletesubject?id={{ subject_info.id }}" onclick="return confirm('Are you sure? you want to delete {{subject_info.title }} ({{ subject_info.subject }})')">Delete</a>
+                <a class="btn danger-btn" href="/deletesubject?id={{ subject_info.id }}" onclick="return confirm('Are you sure? you want to delete {{subject_info.title }} ({{ subject_info.subject }})')">Delete</a>
             </div>
             {% elif session['role'] == 'user' %}
             <div>
                 <a class="btn" href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=subject_info.id) }}">Select</a>
-                <a class="btn profile-delete-btn" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=subject_info.id) }}">Unselect</a>
+                <a class="btn danger-btn" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=subject_info.id) }}">Unselect</a>
                 <a class="btn" href="{{ url_for('user_select_subject') }}">Return to list</a> 
             </div>
             {% else %}
