@@ -22,7 +22,7 @@
 
 html {
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: Verdana, sans-serif;
     color: var(--default-text-colour)
 }
 
