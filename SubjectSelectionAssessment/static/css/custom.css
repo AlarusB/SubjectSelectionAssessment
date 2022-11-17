@@ -1,5 +1,6 @@
 ﻿/* DEFAULT STYLES */
 :root {
+    --default: white;
     --primary: #3C70D7;
     --secondary: rgb(52 92 50);
     --tertiary: rgba(240,240,240);
@@ -9,7 +10,7 @@
     --default-text-colour: #212529;
     --primary-text-colour: white;
     --secondary-text-colour: white;
-    --tetriary-text-colour: #212529;
+    --tertiary-text-colour: #212529;
     --quaternary-text-colour: white;
     --warning-text-colour: white;
     --danger-text-colour: white;
@@ -17,6 +18,7 @@
     --click-brightness: 0.95;
     --hover-quaternary: #1A1D26;
 }
+
 
 html {
     box-sizing: border-box;
@@ -70,13 +72,10 @@ img {
     flex-direction: column;
 }
 
-fab {
+.fa-solid {
     box-sizing: border-box;
-    color: var(--primary-text-colour);
-    background-color: white;
+    color: var(--default-text-colour);
     outline-width: 0;
-    font-size: 18px;
-    font-weight: 400;
     height: 20px;
 }
 
@@ -201,16 +200,22 @@ fab {
     }
 }
 /* Dashboard Table */
-.flat-table {
+.table {
     display: block;
     font-size: 100%;
     overflow: auto;
+    border-spacing: 0; /* Removes the cell spacing via CSS */
     width: auto;
+    border-radius: 6px;
+}
+
+.table tbody {
+    border-top: 2px solid #DDD;
 }
 
 th {
-    background-color: rgb(52, 55, 60);
-    color: white;
+    background-color: var(--quaternary);
+    color: var(--quaternary-text-colour);
     font-weight: normal;
     padding: 10px 15px;
     text-align: center;
@@ -218,16 +223,25 @@ th {
 }
 
 td {
-    background-color: rgb(238, 238, 238);
-    color: rgb(50, 50, 50);
     padding: 8px 12px;
     text-align: center;
 }
 
-tbody tr:nth-child(odd) {
-    background-color: #4C8BF5;
-    color: #fff;
+tr {
+    background-color: var(--tertiary);
+    color: var(--tertiary-text-colour);
+    border-bottom: 1px solid #ddd;
 }
+
+tbody tr:nth-child(odd) {
+    background-color: var(--default);
+    color: var(--default-text-colour);
+}
+
+tr:hover {
+    background-color: #D6EEEE !important;
+}
+
 
 .table-profile-img {
     width: 2rem;
@@ -445,7 +459,7 @@ input, textarea {
     font-weight: 300;
     border-top: solid 1px rgba(0, 0, 0, 0.1);
     background-color: var(--tertiary);
-    color: var(--tetriary-text-colour);
+    color: var(--tertiary-text-colour);
 }
 
 textarea {
@@ -473,7 +487,7 @@ input[type="file"] {
     margin-bottom: 1rem;
     font-size: 0.875rem;
     font-weight: 300;
-    color: var(--tetriary-text-colour);
+    color: var(--tertiary-text-colour);
 }
 #preview {
     width: 100%;
@@ -578,6 +592,7 @@ ul, ol {
     background-color: var(--danger);
     color: var(--danger-text-colour);
     margin-bottom: 15px;
+    border-radius:6px;
 }
 
 /* The close button */

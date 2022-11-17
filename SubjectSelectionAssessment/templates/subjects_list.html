@@ -4,9 +4,20 @@
 
 {% block content %}
 
-<table class="flat-table">
+<style>
+    {% for row in result %}
+    td.colour{{row.id}} {
+        background-color: {{row.colour}};
+    }
+    #colour{{row.id}}:hover {
+        background-color: {{row.colour}}7F!important;
+    }
+    {% endfor %}
+</style>
+
+<table class="table">
     <tr>
-        <th>ID</th>
+        <th>#</th>
         <th>Title</th>
         <th>Subject</th>
         <th>Year</th>
@@ -18,13 +29,8 @@
         <th>Actions</th>
     </tr>
     {% for row in result %}
-    <tr>
-        <style>
-            .colour{{row.id}} {
-                background-color: {{row.colour}}
-            }
-            
-        </style>
+    <tr id="colour{{row.id}}">
+
         <td class="colour{{row.id}}">{{ row.id }}</td>
         <td>{{ row.title }}</td>
         <td>{{ row.subject }}</td>
@@ -35,9 +41,9 @@
         <td>{{ row.start_date }}</td>
         <td>{{ row.end_date }}</td>
         <td>
-            <a href="{{ url_for('view_subject', id=row['id']) }}">View</a>
-            <a href="{{ url_for('edit_subject', id=row['id']) }}">Edit</a>
-            <a href="{{ url_for('delete_subject', id=row['id']) }}" onclick="return confirm('Are you sure? you want to delete {{row.title }} ({{ row.subject }})')">Delete</a>
+            <a title="View Subject" aria-label="View Subject" href="{{ url_for('view_subject', id=row['id']) }}"><i class="fa-solid fa-eye"></i></a>
+            <a title="Edit Subject" aria-label="Edit Subject"  href="{{ url_for('edit_subject', id=row['id']) }}"><i class="fa-solid fa-pen"></i></a>
+            <a title="Delete Subject" aria-label="Delete Subject" href="{{ url_for('delete_subject', id=row['id']) }}" onclick="return confirm('Are you sure? you want to delete {{row.title }} ({{ row.subject }})')"><i class="fa-solid fa-trash-can"></i></a>
         </td>
     </tr>
     {% endfor %}

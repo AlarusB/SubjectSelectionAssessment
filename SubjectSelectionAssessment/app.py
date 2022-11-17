@@ -185,7 +185,7 @@ def login():
         if result is not None:
             return login_user(result)
         else:
-            flash('Incorrect Details? uuuh uuuh login again')
+            flash('Incorrect username or password.')
             return redirect('/login')
     else:
         return render_template('users_login.html')
