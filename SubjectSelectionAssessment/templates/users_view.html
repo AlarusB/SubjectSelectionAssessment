@@ -13,7 +13,7 @@
 
         <div class="profile-title">
             <h1 class="">{{ result.first_name }} {{ result.last_name }}</h1>
-            <h2 class=""><a href="mailto:{{ result.email }}">{{ result.email }}</a></h2>
+            <h2 class=""><a class="a" href="mailto:{{ result.email }}">{{ result.email }}</a></h2>
 
             <div>
                 {% if session['role'] == 'admin' %}

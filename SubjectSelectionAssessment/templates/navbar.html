@@ -19,6 +19,8 @@
 
         </div>
         <div class="nav-align-right">
+            <a title="Toggle Dyslexia Mode" onclick="toggleDyslexia()" aria-label="Toggle Dyslexia Mode"><i class="fa-solid fa-eye"></i></a>
+            <a title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><i class="fa-solid fa-circle-half-stroke"></i></a>
             {% if 'logged_in' in session %}
             <details>
                 <summary class="flex row">
@@ -55,6 +57,8 @@
                         <a href="{{ url_for('login') }}">Login</a>
                         <a href="{{ url_for('add_user') }}">Signup</a>
                         {% endif %}
+                        <a title="Toggle Dyslexia Mode" aria-label="Toggle Dyslexia Mode"><i class="fa-solid fa-eye"></i> Dyslexia</a>
+                        <a title="Toggle Theme" aria-label="Toggle Theme"><i class="fa-solid fa-circle-half-stroke"></i> Theme</a>
                     </li>
                 </ul>
             </details>
@@ -63,3 +67,35 @@
 
 
 </nav>
+<script>
+    function toggleTheme() {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme == "dark") {
+            theme = "light";
+            
+        } else {
+            theme = "dark";
+        }
+        sessionStorage.setItem('data-theme', theme);
+        console.log(theme);
+
+        document.documentElement.classList.add('color-theme-in-transition')
+        document.documentElement.setAttribute('data-theme', theme)
+        window.setTimeout(function () {
+            document.documentElement.classList.remove('color-theme-in-transition')
+        }, 300)
+
+    }
+
+    function toggleDyslexia() {
+
+    }
+
+    let theme = document.documentElement.getAttribute('data-theme');
+    if (sessionStorage.getItem('data-theme') != theme) {
+        toggleTheme()
+    }
+    
+    //document.documentElement.setAttribute('data-theme', 'light')
+
+</script>

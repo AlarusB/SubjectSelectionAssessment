@@ -421,7 +421,6 @@ def list_subjects():
             result = cursor.fetchall()
     return render_template('subjects_list.html', result=result)
 
-
 # View a subject's information
 @app.route('/viewsubject')
 def view_subject():
