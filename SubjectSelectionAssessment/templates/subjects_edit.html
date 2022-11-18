@@ -1,10 +1,9 @@
 {% extends '_layout.html' %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}Edit Subject{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data">
-    <h3>Edit A Subject</h3>
     <label for="title">Title:</label>
     <input id="title" name="title" autocomplete="off" value="{{subject_info.title}}" required>
 

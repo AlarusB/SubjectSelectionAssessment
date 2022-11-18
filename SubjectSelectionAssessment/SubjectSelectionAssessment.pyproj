@@ -35,6 +35,7 @@
     <Content Include="requirements.txt" />
     <Content Include="static\css\custom.css" />
     <Content Include="static\favicon.ico" />
+    <Content Include="static\images\hero_bg.jpeg" />
     <Content Include="templates\header.html" />
     <Content Include="templates\setup.html" />
     <Content Include="templates\navbar.html" />

@@ -34,6 +34,7 @@ html {
 
 body {
     margin: 0;
+    background-color: var(--tertiary);
 }
 
 .container {
@@ -42,6 +43,7 @@ body {
     padding: 16px;
     margin-left: auto;
     margin-right: auto;
+    
 }
 
 div#footer {
@@ -93,9 +95,9 @@ img {
     user-select: none; /* Standard syntax */
 }
 
-.primary-btn {
-    background-color: var(--primary);
-    color: var(--primary-text-colour);
+.secondary-btn {
+    background-color: var(--secondary);
+    color: var(--secondary-text-colour);
 }
 
 .btn:hover {
@@ -139,6 +141,7 @@ img {
 
 .subject-card {
     display: block;
+    background-color: var(--default);
     min-width: 340px;
     max-width: 500px;
     width: 34vmin;
@@ -440,7 +443,7 @@ form {
     margin: 5rem auto auto auto;
     height: 520px fit-content;
     width: 400px;
-    background-color: rgba(255,255,255,0.13);
+    background-color: var(--default);
     border-radius: 10px;
     border: 2px solid rgba(255,255,255,0.1);
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
@@ -554,7 +557,7 @@ input[type="file"] {
 .hero-image {
     display: flex;
     flex-direction: column;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/2234006/pexels-photo-2234006.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+    background-color: var(--primary);
     height: 15rem;
     align-self: center;
     background-repeat: no-repeat;
@@ -567,7 +570,7 @@ input[type="file"] {
 
 .hero-text {
     text-align: center;
-    color: white;
+    color: var(--primary-text-colour);
 }
 
 .hero-header {

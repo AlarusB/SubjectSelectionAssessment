@@ -1,10 +1,9 @@
 {% extends '_layout.html' %}
 
-{% block title %}Edit{% endblock %}
+{% block title %}Edit User Details{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data">
-    <h3>Change your details</h3>
     <input type="hidden" name="id" value="{{ user_info.id }}">
     <input type="hidden" name="old_avatar" value="{{ user_info.avatar }}">
     <label for="first_name">First Name</label>

@@ -185,7 +185,7 @@ def login():
         if result is not None:
             return login_user(result)
         else:
-            flash('Incorrect username or password.')
+            flash('Incorrect email or password.')
             return redirect('/login')
     else:
         return render_template('users_login.html')
@@ -449,6 +449,11 @@ def view_subject():
 
             cursor.execute(sql, values)
             students_selected = cursor.fetchall()
+            # Make a list of all user_id's for buttons
+            student_id_list = []
+            for value in students_selected:
+                student_id_list.append(value['student_id'])
+
             # Retrieve the details of the subject to show on page
             sql = "SELECT * FROM assessment_subjects where id = %s"
             values = (
@@ -459,7 +464,8 @@ def view_subject():
             subject_information['total_credits'] = int(subject_information['external_credits']) + int(subject_information['internal_credits'])
     return render_template('subjects_view.html',
                            subject_info=subject_information,
-                           students_selected=students_selected)
+                           students_selected=students_selected,
+                           student_id_list = student_id_list)
 
 # Student-User related app routes
 
