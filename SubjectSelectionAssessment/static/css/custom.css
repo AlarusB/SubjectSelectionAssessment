@@ -462,7 +462,7 @@ nav details {
         justify-content: space-between;
     }
 
-@media (min-width: 600px) {
+@media (min-width: 670px) {
     nav details {
         display: inline-block;
     }
