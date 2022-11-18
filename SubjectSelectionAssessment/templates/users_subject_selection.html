@@ -4,6 +4,17 @@
 
 {% block content %}
 
+<style>
+    {% for row in result %}
+    td.colour{{row.id}} {
+        background-color: {{row.colour}};
+    }
+    #colour{{row.id}}:hover {
+        background-color: {{row.colour}}7F!important;
+    }
+    {% endfor %}
+</style>
+
 <div class="flex row wrap subject-group">
     {% for row in result %}
     <div class="column">
@@ -34,43 +45,36 @@
     </div>
     {% endfor %}
 </div>
-{# a comment
-<table class="flat-table">
+<table class="table dyslexia">
     <tr>
-        <th>ID</th>
         <th>Title</th>
         <th>Subject</th>
         <th>Year</th>
         <th>Description</th>
         <th>Internal Credits</th>
         <th>External Credits</th>
-        <th>Start Date</th>
-        <th>End Date</th>
         <th>Actions</th>
     </tr>
     {% for row in result %}
-    <tr>
-        <td>{{ row.id }}</td>
+    <tr id="colour{{row.id}}">
         <td>{{ row.title }}</td>
         <td>{{ row.subject }}</td>
         <td>{{ row.year }}</td>
         <td>{{ row.description }}</td>
         <td>{{ row.internal_credits }}</td>
         <td>{{ row.external_credits }}</td>
-        <td>{{ row.start_date }}</td>
-        <td>{{ row.end_date }}</td>
-        <td>
-            <a href="/viewsubject?id={{ row.id }}">View</a>
 
+        <td>
+            <a title="View More About {{ row.title }}" aria-label="View More About {{ row.title }}" href="/viewsubject?id={{ row.id }}"><i class="fa-solid fa-eye"></i></a>
             {% if select_left > 0 and not row.id in already_selected %}
-            <a href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=row['id']) }}">Select</a>
+            <a title="Select {{ row.title }}" aria-label="Select {{ row.title }}"href="{{ url_for('user_add_subject', student_id=session['id'], subject_id=row['id']) }}"><i class="fa-solid fa-check"></i></a>
             {% elif row.id in already_selected %}
-            <i class="fa fa-check"></i>
-            {% endif %}
+            <a title="Unselect {{ row.title }}" aria-label="Unselect {{ row.title }}" href="{{ url_for('delete_user_subject', student_id=session['id'], subject_id=row['id']) }}"><i class="fa-solid fa-xmark"></i></a>
+            {% endif %}        
         </td>
     </tr>
     {% endfor %}
 </table>
-#}
+
 <a class="btn" href="{{ url_for('view_user_subjects', id=session['id']) }}">View selected subjects</a>
 {% endblock %}

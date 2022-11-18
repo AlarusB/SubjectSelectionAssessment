@@ -46,6 +46,13 @@ html {
         --click-brightness: 0.95;
         --hover-quaternary: #1A1D26;
     }
+    html[data-dyslexia-mode='true'] {
+        letter-spacing: 0.35ch;
+        word-spacing: 1.225ch; /* 3.5x letter-spacing */
+        font-variant-ligatures: none; /* explicitly disable ligatures */
+        font-weight: 600; /* demi-bold */
+        font-size: 150%; /* assuming 16px base size, convert to 18pt */
+    }
 
 *, ::before, ::after {
     box-sizing: inherit;
@@ -56,14 +63,16 @@ body {
     margin: 0;
     background-color: var(--secondary);
 }
-
+html[data-dyslexia-mode='true'] .container {
+    width: 100%;
+    max-width: 100%;
+}
 .container {
     /*max-width: 100%;*/
     max-width: 1200px;
     padding: 16px;
     margin-left: auto;
     margin-right: auto;
-    
 }
 
 div#footer {
@@ -148,13 +157,24 @@ img {
 .profile-edit-btn {
 }
 
+html[data-dyslexia-mode='true'] .subject-group{
+    display: none;
+}
+
+.table.dyslexia {
+    display: none;
+}
+html[data-dyslexia-mode='true'] .table.dyslexia {
+    display: block;
+}
 .subject-group {
     margin-left: auto;
     margin-right: auto;
     justify-content: center;
 }
 
-.subject-card {
+
+    .subject-card {
     display: block;
     background-color: var(--default);
     min-width: 340px;
@@ -169,6 +189,7 @@ img {
     overflow: hidden;
     border-radius: 6px;
 }
+
 
 .subject-header {
     text-align: center;
@@ -374,7 +395,8 @@ nav {
         color: var(--tertiary-text-colour);
         text-decoration: none;
         padding: 0.5rem 1rem;
-        border-radius: 0.25rem
+        border-radius: 0.25rem;
+        cursor: pointer;
     }
 
         nav a:hover {

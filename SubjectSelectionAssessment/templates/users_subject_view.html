@@ -3,6 +3,18 @@
 {% block title %}My Subjects{% endblock %}
 
 {% block content %}
+
+<style>
+    {% for row in result %}
+    td.colour{{row.id}} {
+        background-color: {{row.colour}};
+    }
+    #colour{{row.id}}:hover {
+        background-color: {{row.colour}}7F!important;
+    }
+    {% endfor %}
+</style>
+
 <h2>Your Chosen Subjects | ({{5 - select_left}}/5) {% if select_left == 0 %}Please Unselect a subject to choose a new one.{% endif %}</h2>
 
 <div class="flex row wrap subject-group">
@@ -31,6 +43,27 @@
     </div>
     {% endfor %}
 </div>
+<table class="table dyslexia">
+    <tr>
+        <th>Title</th>
+        <th>Subject</th>
+        <th>Internal Credits</th>
+        <th>External Credits</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in result %}
+    <tr id="colour{{row.id}}">
+        <td>{{ row.title }}</td>
+        <td>{{ row.subject }}</td>
+        <td>{{ row.internal_credits }}</td>
+        <td>{{ row.external_credits }}</td>
+        <td>
+            <a title="View {{ row.title }}" aria-label="View {{ row.title }}"href="/viewsubject?id={{ row.subject_id }}"><i class="fa-solid fa-eye"></i></a>
+            <a title="Unselect {{ row.title }}" aria-label="Unselect {{ row.title }}"href="{{ url_for('delete_user_subject', id=row.id) }}"><i class="fa-solid fa-xmark"></i></a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% if select_left > 0 %}
 <a class="btn" href="{{ url_for('user_select_subject') }}">Select a new subject</a>
@@ -44,28 +77,6 @@
     <li><span class="profile-stat-count">External Credits: {{ credits.external }}</span></li>
     <li><span class="profile-stat-count">Total Credits: {{ credits.total}}</span></li>
 </ul>
-{# a comment
-<table class="flat-table">
-    <tr>
-        <th>Title</th>
-        <th>Subject</th>
-        <th>Internal Credits</th>
-        <th>External Credits</th>
-        <th>Actions</th>
-    </tr>
-    {% for row in result %}
-    <tr>
-        <td>{{ row.title }}</td>
-        <td>{{ row.subject }}</td>
-        <td>{{ row.internal_credits }}</td>
-        <td>{{ row.external_credits }}</td>
-        <td>
-            <a href="/viewsubject?id={{ row.subject_id }}">View</a>
-            <a href="{{ url_for('delete_user_subject', id=row.id) }}">Unselect</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-#}
+
 
 {% endblock %}
