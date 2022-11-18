@@ -37,7 +37,8 @@ body {
 }
 
 .container {
-    max-width: 100%;
+    /*max-width: 100%;*/
+    max-width: 1200px;
     padding: 16px;
     margin-left: auto;
     margin-right: auto;
@@ -74,7 +75,6 @@ img {
 
 .fa-solid {
     box-sizing: border-box;
-    color: var(--default-text-colour);
     outline-width: 0;
     height: 20px;
 }
@@ -218,14 +218,14 @@ th {
     color: var(--quaternary-text-colour);
     font-weight: normal;
     padding: 10px 15px;
-    text-align: center;
     font-weight: 800;
+    text-align: left;
 }
 
 td {
     padding: 8px 12px;
-    text-align: center;
 }
+
 
 tr {
     background-color: var(--tertiary);
@@ -235,6 +235,14 @@ tr {
 
 tbody tr:nth-child(odd) {
     background-color: var(--default);
+    color: var(--default-text-colour);
+}
+
+td a i {
+    color: rgba(220,220,220);
+}
+
+tr:hover td a i {
     color: var(--default-text-colour);
 }
 
@@ -288,10 +296,11 @@ nav summary::marker {
 }
 
 details.mobile-only ul {
-    position: absolute;
+    position: fixed;
     right: 0%;
-    transform: translateX(0.3rem);
-    width: 100vw;
+    width: 100%;
+    top: 70px;
+    border-radius: 0 0 0.25rem 0.25rem;
 }
 
 nav span.dropdown-caret {
@@ -335,9 +344,9 @@ nav {
     background-color: var(--quaternary);
     color: var(--quaternary-text-colour);
     font-size: 1rem;
-    padding: 0.25rem;
-    display: flex;
-    justify-content: space-between;
+    position: fixed;
+    min-height: 3.25rem;
+    height: 70px;
 }
 
     nav a {
@@ -380,10 +389,10 @@ nav {
             background-color: var(--hover-quaternary);
         }
 
-    /* RESPONSIVE */
-    nav details {
-        display: none;
-    }
+/* RESPONSIVE */
+nav details {
+    display: none;
+}
 
     /* RESPONSIVE */
     nav a {
@@ -397,6 +406,18 @@ nav {
         display: inline-block;
         border: 1px solid white;
         border-radius: 0.25rem;
+    }
+        nav .mobile-only p {
+            display: block;
+            color: var(--quaternary-text-colour);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0;
+        }
+    nav .container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
 
 @media (min-width: 600px) {
@@ -541,6 +562,7 @@ input[type="file"] {
     background-attachment: fixed;
     align-items: center;
     justify-content: center;
+    margin-top: 70px;
 }
 
 .hero-text {
@@ -611,10 +633,3 @@ ul, ol {
     .closebtn:hover {
         color: var(--default-text-colour);
     }
-
-
-.sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
